@@ -1,6 +1,3 @@
-Unsupervised Learning with feo
-================
-
 # 1. What is Unsupervised Learning?
 
 In the ever-evolving landscape of artificial intelligence and machine
