@@ -18,7 +18,11 @@ Unsupervised learning is the art of discovering the secrets hidden in the world 
 
 ## 1.2. The Building Blocks of Unsupervised Learning
 
-At the heart of unsupervised learning are two fundamental tasks: clustering and dimensionality reduction. \### 1.2.1. Clustering Clustering is the process of grouping similar observations together while keeping dissimilar ones separate. Think of it as organizing a library without labels; books with similar content are grouped together to form clusters. This technique is extremely useful in areas ranging from customer segmentation in marketing to identifying disease subtypes in healthcare.
+At the heart of unsupervised learning are two fundamental tasks: clustering and dimensionality reduction. \
+
+### 1.2.1. Clustering 
+
+Clustering is the process of grouping similar observations together while keeping dissimilar ones separate. Think of it as organizing a library without labels; books with similar content are grouped together to form clusters. This technique is extremely useful in areas ranging from customer segmentation in marketing to identifying disease subtypes in healthcare.
 
 ### 1.2.2. Dimensionality Reduction
 

@@ -4,6 +4,7 @@
     Insights](#11-in-search-of-hidden-insights)
   - [1.2. The Building Blocks of Unsupervised
     Learning](#12-the-building-blocks-of-unsupervised-learning)
+    - [1.2.1. Clustering](#121-clustering)
     - [1.2.2. Dimensionality Reduction](#122-dimensionality-reduction)
   - [1.3. Applications of Unsupervised
     Learning](#13-applications-of-unsupervised-learning)
@@ -87,7 +88,10 @@ glass and letting it discover its own patterns and connections.
 ## 1.2. The Building Blocks of Unsupervised Learning
 
 At the heart of unsupervised learning are two fundamental tasks:
-clustering and dimensionality reduction. \### 1.2.1. Clustering
+clustering and dimensionality reduction.  
+
+### 1.2.1. Clustering
+
 Clustering is the process of grouping similar observations together
 while keeping dissimilar ones separate. Think of it as organizing a
 library without labels; books with similar content are grouped together
