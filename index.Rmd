@@ -38,7 +38,7 @@ When you come across such a title, you may wonder why it is important to determi
 
 ![Figure 2.1: an example of a data set whose cluster number can easily be determined.](https://cdn-images-1.medium.com/max/800/1*b218oEdOwrx8g24HC13B5w.png)
 
-However, determining number of clusters in commonly encountered data sets is too complex to be achieved simply by observing overall structure of data set with a scatter plot. For example, when scatter plot below is analyzed, it is not possible to tell how many clusters data set is divided into. However, since situations like one in above plot are frequently encountered, some methods have been proposed to determine number of clusters. I will now explain what some of these methods are, how they are calculated step by step and their implementation in R.
+However, determining number of clusters in commonly encountered data sets is too complex to be achieved simply by observing overall structure of data set with a scatter plot. For example, when scatter plot below is analyzed, it is not possible to tell how many clusters data set is divided into. 
 
 ![Figure 2.2: an example of a data set whose cluster number cannot easily be determined.](https://cdn-images-1.medium.com/max/800/1*ekHDzQi6HseK6uGd6yv0Zg.png)
 

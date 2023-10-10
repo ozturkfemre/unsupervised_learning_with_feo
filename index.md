@@ -140,10 +140,7 @@ However, determining number of clusters in commonly encountered data
 sets is too complex to be achieved simply by observing overall structure
 of data set with a scatter plot. For example, when scatter plot below is
 analyzed, it is not possible to tell how many clusters data set is
-divided into. However, since situations like one in above plot are
-frequently encountered, some methods have been proposed to determine
-number of clusters. I will now explain what some of these methods are,
-how they are calculated step by step and their implementation in R.
+divided into.
 
 <figure>
 <img
