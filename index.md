@@ -1,3 +1,60 @@
+
+- [1. What is Unsupervised Learning?](#1-what-is-unsupervised-learning)
+  - [1.1. In Search of Hidden
+    Insights](#11-in-search-of-hidden-insights)
+  - [1.2. The Building Blocks of Unsupervised
+    Learning](#12-the-building-blocks-of-unsupervised-learning)
+    - [1.2.2. Dimensionality Reduction](#122-dimensionality-reduction)
+  - [1.3. Applications of Unsupervised
+    Learning](#13-applications-of-unsupervised-learning)
+- [2. Choosing optimal number of
+  clusters](#2-choosing-optimal-number-of-clusters)
+  - [2.1. Elbow Method](#21-elbow-method)
+  - [2.2. Average Silhouette Method](#22-average-silhouette-method)
+  - [2.3. Gap Statistic](#23-gap-statistic)
+  - [2.4. Calinski-Harabasz Method](#24-calinski-harabasz-method)
+  - [2.5. Davies-Bouldin Method](#25-davies-bouldin-method)
+  - [2.6. Dunn Index](#26-dunn-index)
+  - [k determination cheat sheet](#k-determination-cheat-sheet)
+- [3. k-means Clustering](#3-k-means-clustering)
+  - [3.1. Data Preparation for
+    k-means](#31-data-preparation-for-k-means)
+  - [3.2. k-means in R](#32-k-means-in-r)
+- [4. k-medoids Clustering](#4-k-medoids-clustering)
+  - [4.1. k-medoids in R](#41-k-medoids-in-r)
+  - [k-means and k-medoids cheat
+    sheet](#k-means-and-k-medoids-cheat-sheet)
+- [5. Hierarchical Clustering](#5-hierarchical-clustering)
+  - [5.1. Ward’s Minimum Variance
+    Linkage](#51-wards-minimum-variance-linkage)
+  - [5.2. Cophenetic Distance](#52-cophenetic-distance)
+  - [5.3. Cophenetic Distance in R](#53-cophenetic-distance-in-r)
+  - [5.4. Ward’s Minimum Variance Method in
+    R](#54-wards-minimum-variance-method-in-r)
+  - [5.5. Average Linkage Method](#55-average-linkage-method)
+    - [5.5.1. Average Linkage Method in
+      R](#551-average-linkage-method-in-r)
+  - [hierarchical clustering cheat
+    sheet](#hierarchical-clustering-cheat-sheet)
+- [6. Density Based Clustering](#6-density-based-clustering)
+  - [6.1. Density Based Clustering in
+    R](#61-density-based-clustering-in-r)
+- [7. Cluster Validation](#7-cluster-validation)
+  - [7.1. Connectivity](#71-connectivity)
+    - [7.1.1. Connectivity in R](#711-connectivity-in-r)
+  - [7.2. Corrected Rand Index](#72-corrected-rand-index)
+    - [7.2.1. Corrected Rand Index in R](#721-corrected-rand-index-in-r)
+  - [7.3. Meila’s Variation of
+    Information](#73-meilas-variation-of-information)
+    - [7.3.1. Meila’s Variation of Information in
+      R](#731-meilas-variation-of-information-in-r)
+  - [7.4. Silhouette Coefficient](#74-silhouette-coefficient)
+  - [7.5. Dunn Index](#75-dunn-index)
+- [8. Principle Component Analysis](#8-principle-component-analysis)
+  - [8.1. Principle Component Analysis in
+    R](#81-principle-component-analysis-in-r)
+- [Exercises](#exercises)
+
 # 1. What is Unsupervised Learning?
 
 In the ever-evolving landscape of artificial intelligence and machine
@@ -164,7 +221,7 @@ steps to calculate silhouette value for a observation are:
 
 1.  calculate cluster tightness: average distance purple observation to
     all blue observations which all are in same cluster, which is called
-    $a_i$
+    $$a_{i}$$
 
     <figure>
     <img
@@ -175,8 +232,8 @@ steps to calculate silhouette value for a observation are:
     </figure>
 
 2.  calculate cluster separation: observation’s minimum distance to all
-    observations in a different cluster(yellow cluster), which is
-    called$b_i$
+    observations in a different cluster(yellow cluster), which is called
+    $$b_{i}$$
 
     <figure>
     <img
@@ -187,23 +244,21 @@ steps to calculate silhouette value for a observation are:
     </figure>
 
 3.  calculate silhouette coefficient: calculate its silhouette value
-    $s_i$ as difference between $b_i$ and$a_i$, divided by maximum of
-    these two distances:
+    $$s_{i}$$ as difference between $$b_{i}$$ and $$a_{i}$$, divided by
+    maximum of these two distances:
 
-$$ 
-s_i = \frac{(b_i - a_i)}{max(b_i, a_i)}
-$$
+$$s_i=\frac{(b_i-a_i)}{max(b_i,a_i)}$$
 
 After calculating silhouette coefficient of each observation, we can
 finally, calculate average silhouette value for all observations:
-mean(si). To determine number of clusters, we usually cluster each
-number of clusters for a range of 2 to 10 clusters and obtain average
-silhouette value for each number of clusters. silhouette value ranges
-from -1 to 1, where a value of 1 indicates a strong similarity to other
-observations in its own cluster, and a value of -1 indicates a strong
-similarity to observations in another cluster. In other words, number of
-clusters with highest silhouette value is number of clusters we will
-determine.
+mean($$s_{i}$$). To determine number of clusters, we usually cluster
+each number of clusters for a range of 2 to 10 clusters and obtain
+average silhouette value for each number of clusters. silhouette value
+ranges from -1 to 1, where a value of 1 indicates a strong similarity to
+other observations in its own cluster, and a value of -1 indicates a
+strong similarity to observations in another cluster. In other words,
+number of clusters with highest silhouette value is number of clusters
+we will determine.
 
 Again `fviz_nbclust` function is a way to see average silhoutte plot to
 decide optimal number of clusters:
@@ -288,9 +343,7 @@ steps to perform calinski-harabasz method are:
 
 3.  calculate calinski-harabasz coefficients by using following formula:
 
-$$
-    \frac{BCSS}{WCSS} - \frac{n-k}{k-1}
-$$
+$$\frac{BCSS}{WCSS}-\frac{n-k}{k-1}$$
 
 where,
 
@@ -371,7 +424,7 @@ clusters.
 
 Just like Calinski-Harabasz method, there is no visualization function
 in R as for Davies-Bouldin method. For this reason, I will write a
-function that calculates and visualizes Davies — Bouldin value for
+function that calculates and visualizes Davies Bouldin value for
 clusters 2 to 10 using `NbClust` function in `NbClust` package.
 
 ``` r
@@ -497,6 +550,14 @@ measure. IEEE transactions on pattern analysis and machine intelligence,
 \[8\] Dunn, J. C. (1973). A fuzzy relative of ISODATA process and its
 use in detecting compact well-separated clusters.
 
+## k determination cheat sheet
+
+<figure>
+<img src="images/machinelearningwithfeo_kdetermination.png"
+alt="k-determination-cheat-sheat" />
+<figcaption aria-hidden="true">k-determination-cheat-sheat</figcaption>
+</figure>
+
 ---
 
 # 3. k-means Clustering
@@ -570,7 +631,7 @@ clustering will look like follows:
 
 ![](https://miro.medium.com/v2/resize:fit:720/0*6G4K1Pq9PgTCPfaH)
 
-## **3.1. Data Preparation for k-means**
+## 3.1. Data Preparation for k-means
 
 In general, data preparation for a cluster analysis in unsupervised
 learning should go as follows:
@@ -955,7 +1016,16 @@ medoids. Statistical Data Analysis Based on the L1-Norm and Related
 Methods, Y. Dodge Ed.
 
 \[2\] Kaufman, L., & Rousseeuw, P. J. (2009). Finding groups in data: an
-introduction to cluster analysis. John Wiley & Sons.
+introduction to cluster analysis. John Wiley & Sons
+
+## k-means and k-medoids cheat sheet
+
+<figure>
+<img src="images/machinelearningwithfeo_kmeans.png"
+alt="k-means-and-k-medoids-cheat-sheet" />
+<figcaption
+aria-hidden="true">k-means-and-k-medoids-cheat-sheet</figcaption>
+</figure>
 
 # 5. Hierarchical Clustering
 
@@ -1035,7 +1105,7 @@ metrics that are used in clustering analysis. In the case of
 Hierarchical Clustering, there is a way to decide distance metric which
 is called cophenetic distance.
 
-## **5.2. Cophenetic Distance**
+## 5.2. Cophenetic Distance
 
 Cophenetic distance is a measure used in hierarchical clustering to
 evaluate the similarity between two observations in the dendrogram
@@ -1059,7 +1129,7 @@ between cophenetic distance and the original distance between
 observations in the data space indicates that the clustering solution is
 preserving the structure of the data well.
 
-## **5.3. Cophenetic Distance in R**
+## 5.3. Cophenetic Distance in R
 
 There are many packages and functions available to implement k-means
 algorithm in R. In this article, I will show you cophenetic function in
@@ -1114,7 +1184,7 @@ and distance matrix is examined, it is observed that hierarchical
 clustering with Euclidean distance gives better results. That’s why we
 will continue the analysis with Euclidean distance metric.
 
-## **5.4. Ward’s Minimum Variance Method in R**
+## 5.4. Ward’s Minimum Variance Method in R
 
 Hierarchical clustering can be represented by a dendrogram, which is a
 tree-like structure that shows the hierarchy of clusters and the
@@ -1356,6 +1426,15 @@ objective function. Journal of the American statistical association,
 \[8\] Triayudi, A., & Fitri, I. (2018). Comparison of parameter-free
 agglomerative hierarchical clustering methods. ICIC Express Letters,
 12(10), 973–980.
+
+## hierarchical clustering cheat sheet
+
+<figure>
+<img src="images/machinelearningwithfeo_hierarchical.png"
+alt="hierarchical-clustering-cheat-sheet" />
+<figcaption
+aria-hidden="true">hierarchical-clustering-cheat-sheet</figcaption>
+</figure>
 
 # 6. Density Based Clustering
 
@@ -1642,7 +1721,7 @@ approach is:
     the cluster than to any other observation outside the cluster, to
     the total number of observations in the cluster.
 
-### **7.1.1. Connectivity in R**
+### 7.1.1. Connectivity in R
 
 You can easily get your Connectivity value with `connectivity` function
 from `clValid` package. In the code below, you can find the code
@@ -1706,7 +1785,7 @@ cluster.stats(d = dist(df),diagnosis, k2m_data$cluster)$corrected.rand
 
     ## [1] 0.6465881
 
-## 7.3. **Meila’s Variation of Information**
+## 7.3. Meila’s Variation of Information
 
 Meila’s variation of information (MVI) is a measure used to assess the
 similarity between two different clustering solutions for a given data
@@ -1725,21 +1804,16 @@ The steps to calculate MVI are:
 1.  Compute the contingency matrix that counts the number of
     observations in the same cluster for both clustering solutions.
 
-2.  Compute the entropy for each clustering solution using the
-    formula:  
-    $$
-    \sum_{k = 1}^{n_k}p(k)log(p(k))
-    $$
+2.  Compute the entropy for each clustering solution using the formula:
 
-    where $p_k$ is the proportion of observations in the k-th cluster.
+$$\sum_{k=1}^{n_k}p(k)log(p(k))$$ where $$p_k$$ is the proportion of
+observations in the k-th cluster.
 
-3.  Compute Meila’s VI as: $$
-    VI = H^1 + H^2 - 2*I
-    $$ where $H^1$, $H^2$ are the entropies of the two clustering
-    solutions, and I is the mutual information between the two
-    clustering solutions.
+3.  Compute Meila’s VI as: $$VI=H^1+H^2-2*I$$ where $$H^1$$, $$H^2$$ are
+    the entropies of the two clustering solutions, and I is the mutual
+    information between the two clustering solutions.
 
-### 7.3.1. **Meila’s Variation of Information in R**
+### 7.3.1. Meila’s Variation of Information in R
 
 Just as CRI, you can easily do this with the function `cluster.stats` in
 the `fpc` package. In the code below, you can find the code for MVI
