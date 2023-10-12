@@ -8,57 +8,43 @@ output:
 
 # 1. What is Unsupervised Learning?
 
-In the ever-evolving landscape of artificial intelligence and machine learning, unsupervised learning stands as one of the most compelling and versatile subjects. It is the cornerstone of algorithms and techniques that enable machines to uncover hidden patterns, structures and knowledge from raw data without the explicit guidance of labeled examples. In this episode, we take a journey to understand the essence of unsupervised learning.
+Imagine navigating through an infinite sea of data, where texts, images, numbers, and more converge in a wild stream. This rich source of the digital age harbors true value deep within, though it may not be apparent at first glance. It's like charting a course on a map in a vast ocean of uncharted data, similar to sailing through uncharted waters with no prior knowledge. This is where unsupervised learning comes into play.
 
-## 1.1. In Search of Hidden Insights
+Unsupervised learning is the art of uncovering the hidden secrets within the world of data. Instead of being guided by labeled examples, unsupervised learning algorithms delve into the depths of the data ocean to reveal underlying structures, relationships, and patterns. It's like giving a machine a magnifying glass and letting it discover its own patterns and connections.
 
-Imagine navigating through a sea of endless streams of data - where texts, images, numbers and more come together in a frenzy. This rich resource of the digital age often carries real value hidden deep within. Traditional machine learning approaches rely on labeled data for training, and it's like navigating with a map. You know your destination and your route is clearly marked. But imagine a treasure map that is handed to you without any explanation, signs or clues. This is where unsupervised learning comes into the picture.
+At the core of unsupervised learning are two main concepts: clustering and dimensionality reduction. Clustering involves grouping observations in a dataset based on their similarities. Think of it as organizing a new bookshelf you've just acquired. You know you need to put the books from your desk and the tables around the house into it, but how do you determine where each book goes on the shelf, and what order they should be in? The books by authors like Asimov and Herbert, who write science fiction, can be grouped together due to their similarity. On the other hand, authors like Joyce and Camus, who are considered classics, can be put in a separate cluster. In essence, you've created two clusters: classic literature and science fiction books. This clustering technique, like the one I've mentioned, is incredibly useful in various fields, from customer segmentation in marketing to identifying subtypes of diseases in healthcare.
 
-Unsupervised learning is the art of discovering the secrets hidden in the world of data. It involves a set of techniques that allow machines to dive deep into data without knowing what to look for. Instead of being guided by labeled examples, unsupervised learning algorithms dive deep into the ocean of data to uncover underlying structures, relationships and insights. It's like giving a machine a magnifying glass and letting it discover its own patterns and connections.
+Dimensionality reduction, on the other hand, involves simplifying complex data by reducing the number of features or dimensions. Imagine a detailed picture; dimensionality reduction helps create a simpler, abstract representation that preserves the essence of the original. It's important to remember that every task we assign to machines comes with a cost, just like a task at work or a school assignment. Tasks that are simpler require less time, effort, and potentially much more. Dimensionality reduction accomplishes exactly that. A reduced dataset allows the machine to work with less strain and lower costs. Plus, it's not just about the cost; it's also about the possibilities. Data visualization is limited to three dimensions. Beyond that, visualizing datasets with more variables is impossible. However, if you reduce a 15-variable dataset to two variables, it becomes visually representable. Taking all these aspects into account, dimensionality reduction acts as the benevolent algorithm wizard, saving us from the curse of high dimensionality.
 
-## 1.2. The Building Blocks of Unsupervised Learning
+In the rest of this book, we'll explore various clustering algorithms and learn how Principal Component Analysis (PCA), a dimensionality reduction technique, works. We'll see how it's calculated step by step and how to implement it in R. You can also test and reinforce what you've learned with the exercises at the end of the book. Keep in mind that machine learning is like an iceberg; teaching is what's visible, learning is the hidden part of the iceberg. If you don't practice what you've learned with various datasets, you'll essentially learn nothing. Considering all of this, I hope this book will be beneficial for you.
 
-At the heart of unsupervised learning are two fundamental tasks: clustering and dimensionality reduction. \
+# 2. Choosing the Optimal Number of Clusters
 
-### 1.2.1. Clustering 
-
-Clustering is the process of grouping similar observations together while keeping dissimilar ones separate. Think of it as organizing a library without labels; books with similar content are grouped together to form clusters. This technique is extremely useful in areas ranging from customer segmentation in marketing to identifying disease subtypes in healthcare.
-
-### 1.2.2. Dimensionality Reduction
-
-Dimensionality reduction, on the other hand, is about simplifying complex data by reducing the number of features or dimensions. Think of a detailed picture; dimensionality reduction helps create a simpler, abstract representation that preserves the essence of the original. This not only saves computational resources, but also helps visualize high-dimensional data and identify critical features.
-
-## 1.3. Applications of Unsupervised Learning
-
-The applications of unsupervised learning are wide-ranging and continually expanding. From recommendation systems that suggest your next favorite movie to anomaly detection in cybersecurity, unsupervised learning plays a pivotal role in modern technology. It is the foundation of natural language processing, computer vision, and countless other fields.
-
-# 2. Choosing optimal number of clusters
-
-When you come across such a title, you may wonder why it is important to determine number of clusters. first reason is that number of clusters must be predetermined for clustering algorithms to work. For example, many algorithms such as k-means, k-medoids, hierarchical clustering need to know number of clusters in order to work. Depending on data set and work done with that data set, we may know number of clusters in advance. For example, in figure 2.1, it is quite possible to determine number of clusters with a scatter plot.
+When encountering a title like this, you might wonder why determining the number of clusters is important. Let's recall the example of the bookshelf from the previous section. We separated the books in the bookshelf into two clusters: classic literature and science fiction books. However, how did we decide that there were only two clusters? Can we be truly certain that two clusters are the correct number? In fact, the example was manageable because we only had six books. What if we had a million books to deal with? Determining the number of clusters can be feasible in some cases but challenging in others. Visualizing this with a dataset can be enlightening. For example, when you look at the distribution graph below, you can determine that there are three clusters because observations are concentrated around three distinct points.
 
 ![Figure 2.1: an example of a data set whose cluster number can easily be determined.](https://cdn-images-1.medium.com/max/800/1*b218oEdOwrx8g24HC13B5w.png)
 
-However, determining number of clusters in commonly encountered data sets is too complex to be achieved simply by observing overall structure of data set with a scatter plot. For example, when scatter plot below is analyzed, it is not possible to tell how many clusters data set is divided into. 
+However, determining the number of clusters in commonly encountered datasets is often too complex to be achieved solely by observing the general structure of the data with a distribution graph. For instance, when examining the distribution graph below, it will be quite challenging to determine how many clusters the dataset is divided into.
 
 ![Figure 2.2: an example of a data set whose cluster number cannot easily be determined.](https://cdn-images-1.medium.com/max/800/1*ekHDzQi6HseK6uGd6yv0Zg.png)
 
-However, since situations like one in above plot are frequently encountered, some methods have been proposed to determine number of clusters. we will cover what some of these methods are, how they are calculated step by step and their implementation in R. In all of examples given, same data set ([Breast Cancer Wisconsin](https://archive.ics.uci.edu/ml/datasets/breast+cancer+wisconsin+%28diagnostic%29)) is used.
+Since such problems are constantly encountered, a number of methods have been developed for the task of determining the number of clusters. In the rest of this section we will see what six of the most used methods are, how they are calculated step by step and how they are implemented in R. In all of examples given, same data set ([Breast Cancer Wisconsin](https://archive.ics.uci.edu/ml/datasets/breast+cancer+wisconsin+%28diagnostic%29)) is used.
 
 ## 2.1. Elbow Method
 
-Elbow method, also known as *total within sum of squares*, is a technique used to determine optimal number of clusters for a k-means clustering analysis. idea behind elbow method is to run k-means clustering on data set for a range of values of k (number of clusters), and for each value of k calculate sum of squared distances of each point from its closest centroid (SSE). elbow point is point on plot of SSE against number of clusters (k) where change in SSE begins to level off, indicating that adding more clusters doesn't improve model much. [1], [2]
+Elbow method is a technique used to determine the optimal number of clusters in a cluster analysis. The idea behind it is to run clustering algorithm on the dataset for a set number of clusters (k) and calculate the sum of squared distances (SSE) of each point to the nearest center for each value of k. The elbow point is the point at which the change in the SSE starts to flatten out in the plot of the SSE versus k, indicating that adding more clusters does not improve the model much. [1], [2]
 
-steps to perform elbow method are:
+Elbow method can be calculated with the following steps:
 
-1.  Select a range of k values, usually from 1 to 10 or square root of number of observations in data set.
+1.  Determine the number of clusters, usually between 1 and 10 but can vary depending on the analysis.
 
-2.  Run k-means clustering for each k value and calculate SSE (sum of squared distances of each point from its closest centroid).
+2.  Run the desired clustering algorithm for each k value and calculate SSE for each k value.
 
-3.  Plot SSE for each k value.
+3.  A line graph is drawn with each k value on the x-axis and the SSE values on the y-axis.
 
-4.  point on plot where SSE starts to decrease at a slower rate is elbow point, and corresponding number of clusters is optimal value for k.
+4.  The point where the SSE starts to decrease at a slower rate is the elbow point and the corresponding number of clusters is the optimal value for k.
 
-Undoubtedly, Elbow method is one of most widely used methods. It can be said to be a method that follows same logic as k-means. However, it would not be correct to say that it gives good results under all circumstances. Sometimes it can even be said to be misleading. For this reason, although I use elbow method in every cluster analysis, I do not rely on it alone.
+Undoubtedly, Elbow method is one of the most widely used methods. However, it would be wrong to say that it gives good results under all circumstances. Sometimes it can even be said to be misleading. For this reason, it should be emphasized that the Elbow Method should be used to determine the number of clusters in every cluster analysis; however, it should not be relied on this method alone.
 
 In R, `factoextra` packages offers fancy plots for some of methods to determine optimal number of clusters in this post. I will use `fviz_nbclust` function to visualize elbow method for data set.
 
@@ -95,25 +81,25 @@ For example, output above shows that there is no sharp elbow. For this reason, i
 
 ## 2.2. Average Silhouette Method
 
-Average silhouette method measures how well-defined a particular cluster is, and how well-separated it is from other clusters. At this point, it is necessary to state that Silhouette value is calculated for each observation in data set. Average of silhouette value of all observations gives us average silhouette value, which is silhouette value of clustering analysis [3] , [4].
+Average silhouette method is a validity metric that measures how well a particular observation is defined within its cluster and how well it is separated from other clusters. It is calculated in three steps.
 
-steps to calculate silhouette value for a observation are:
-
-1.  calculate cluster tightness: average distance purple observation to all blue observations which all are in same cluster, which is called \[a_{i}\]
+1.  Cluster tightness is calculated: Silhouette coefficient is computed by dividing the total distance of the observation being evaluated (highlighted in purple in the diagram below) to the other elements of the cluster it belongs to, by the total number of observations. This metric can be denoted as a(i). (Euclidean distance metric is commonly preferred when calculating distances.)
 
     ![Figure 2.3: illustration of cluster tightness calculation](https://cdn-images-1.medium.com/max/800/1*oPJ8x71lbkMomHRx4qm2Ug.png)
 
-2.  calculate cluster separation: observation's minimum distance to all observations in a different cluster(yellow cluster), which is called \[b_{i}\]
+2.  Cluster separation is calculated: the distance of the observation for which the silhouette coefficient is calculated to the least distant observation among the observations in the clusters to which it does not belong. We can call this metric b(i).
 
     ![Figure 2.4: illustration of cluster separation calculation](https://cdn-images-1.medium.com/max/800/1*h0Ues0gLRs2FD5TrOpmFGA.png)
 
-3.  calculate silhouette coefficient: calculate its silhouette value \[s_{i}\] as difference between \[b_{i}\] and \[a_{i}\], divided by maximum of these two distances:
+3.  Silhouette coefficient is calculated: The silhouette coefficient is calculated by taking the difference of b(i) from a(i) and dividing by the higher value of b(i) and a(i).
 
-\[s_i=\frac{(b_i-a_i)}{max(b_i,a_i)}\]
+![](https://miro.medium.com/v2/resize:fit:640/format:webp/1*L2nNHjwqpS7ZOdXZEvTC2g.png)
 
-After calculating silhouette coefficient of each observation, we can finally, calculate average silhouette value for all observations: mean(\[s_{i}\]). To determine number of clusters, we usually cluster each number of clusters for a range of 2 to 10 clusters and obtain average silhouette value for each number of clusters. silhouette value ranges from -1 to 1, where a value of 1 indicates a strong similarity to other observations in its own cluster, and a value of -1 indicates a strong similarity to observations in another cluster. In other words, number of clusters with highest silhouette value is number of clusters we will determine.
+With the above steps, Silhouette value is calculated for each observation in the dataset. By examining Silhouette coefficient for each observation, we can assess how successful the clustering is for each observation. The Silhouette coefficient, which takes values between -1 and 1, indicates that the closer the value is to 1, the more successful the clustering result is. However, let's remember that our priority here is to determine the number of clusters.
 
-Again `fviz_nbclust` function is a way to see average silhoutte plot to decide optimal number of clusters:
+To calculate validation of a clustering result, we can sum Silhouette values for all observations and divide it by the total number of observations in the dataset. Nevertheless, this approach contradicts our primary objective in this section. To determine the number of clusters, we can use Silhouette method by performing clustering for each number of clusters within a specific range (e.g., from 2 to 10), calculating Silhouette value for each clustering, and searching for the highest value.
+
+Again `fviz_nbclust` function is a way to see average silhouette plot to decide optimal number of clusters:
 
 ```{r}
 fviz_nbclust(df, # data
@@ -125,21 +111,19 @@ As can be easily seen from plot, clustering model with highest silhouette value 
 
 ## 2.3. Gap Statistic
 
-Gap Statistic Method compares observed within-cluster variation for different values of k with variation expected under a null reference distribution of data. [5]
+Gap is a metric that measures cluster validity by comparing the observed within-cluster variance for different values of k with the expected variance under a null reference distribution of the data and is calculated in six different steps. [5]
 
-steps to perform gap statistic method are:
+1.  A range of k values between 2 and 10 is usually chosen.
 
-1.  Select a range of k values, usually from 1 to 10 or square root of number of observations in data set.
+2.  For each k value, the data set is clustered with the desired clustering algorithm and the intra-cluster variance is calculated.
 
-2.  Run clustering algorithm (such as k-means or hierarchical clustering) for each k value and calculate within-cluster variation Wk.
+3.  Reference clusters are created by randomly sampling the original data and the intra-cluster variance of each cluster is calculated.
 
-3.  Generate B reference data sets by randomly sampling original data and calculate within-cluster variation W\*k for each data set.
+4.  Gap Statistic value is obtained by taking the difference between the intracluster variance of the actual clusters and the intracluster variance of the reference clusters.
 
-4.  Calculate gap statistic
+5.  Gap Statistic value is calculated separately for each k value.
 
-5.  Plot gap statistic for each k value.
-
-6.  k value that corresponds to maximum gap statistic is optimal number of clusters.
+6.   k value corresponding to the maximum Gap Statistic is the optimum number of clusters.
 
 Again `fviz_nbclust` function is a way to see gap statistic plot to decide optimal number of clusters:
 
@@ -150,32 +134,30 @@ fviz_nbclust(df,
              method = "gap_stat")
 ```
 
-Just like Average Silhouette Method, Gap Statistic Method is also offers 2 as optimal number of clusters.
+Just like Average Silhouette Method, Gap Statistic Method is also offered 2 as optimal number of clusters.
 
 ## 2.4. Calinski-Harabasz Method
 
-Calinski-Harabasz index (also known as Variance Ratio Criterion) is a commonly used evaluation metric for comparing different clustering solutions in unsupervised learning. It is a ratio of between-cluster variance and within-cluster variance, and it is used to determine number of clusters that should be used in a clustering solution[6].
+Calinski-Harabasz, also known as the Variance Ratio Criterion, is used for cluster validity and cluster number determination, just like other methods. The method, which can also be explained as a ratio of inter-cluster variance and intra-cluster variance, is calculated in three different steps[6].
 
-steps to perform calinski-harabasz method are:
-
-1.  calculate within cluster sum of squares (WCSS): sum of squared distances between each observation and its corresponding cluster center(barycenter).
+1.  For each cluster, the average distance to the cluster center of all observations in that cluster is calculated. It can also be called WCSS
 
     ![](https://cdn-images-1.medium.com/max/800/1*4WNGuodDuuGJE_rCGrQwLw.png)
 
-2.  calculate between cluster sum of squares (BCSS): calculate sum of squared distances between each cluster center and overall mean of all observation.
+2.  For each cluster, the distance from the center of that cluster to the center of the dataset is calculated. We can call it BCSS.
 
     ![](https://cdn-images-1.medium.com/max/800/1*aeLLLdSZe-juNaQIm2irbQ.png)
 
-3.  calculate calinski-harabasz coefficients by using following formula:
+3.  Calinski-Harabasz coefficient is calculated for each cluster using the formula below.
 
-\[\frac{BCSS}{WCSS}-\frac{n-k}{k-1}\]
+$$\frac{BCSS}{WCSS}-\frac{n-k}{k-1}$$
 
 where,
 
 k: total cluster number,\
 n:total observation number
 
-Calinski-Harabasz index ranges from 0 to infinity, with a higher value indicating a better clustering. For Calinski - Harabasz method, there is no visualization function in R as in methods I mentioned before. For this reason, lets write a function that calculates and visualizes Calinski - Harabasz values for clusters 2 to 10 using `calinhara` function in `fpc` package.
+Calinski-Harabasz index takes values between 0 and infinity and a higher value indicates a better clustering. For the Calinski - Harabasz method, R does not have a visualization function like the methods I mentioned earlier. Therefore, let's write a function that calculates and visualizes Calinski - Harabasz values for clusters between 2 and 10 using using `calinhara` function in `fpc` package.
 
 ```{r}
 library(fpc) # for calinhara function
@@ -208,23 +190,22 @@ As other methods, Calinski --- Harabasz methods is also offered 2 clusters f
 
 ## 2.5. Davies-Bouldin Method
 
-Davies-Bouldin index (DBI) is a measure of similarity between clusters in a clustering solution. DBI is calculated as average similarity between each cluster and its most similar cluster, where similarity between two clusters is defined as maximum distance between any observation in one cluster and its closest observation in other cluster. [7]
+Davies-Bouldin is a cluster validity and cluster number determination metric that measures the similarity between clusters[7]. It is calculated in three main steps as follows:
 
-steps to perform DBI are:
 
-1.  calculate intra-cluster dispersion: average distance of all data points in each cluster to cluster center.
+1.  For each cluster, the average distance to the cluster center of all observations in that cluster is calculated.
 
     ![](https://cdn-images-1.medium.com/max/800/1*aeLLLdSZe-juNaQIm2irbQ.png)
 
-2.  calculate separation criteria: Euclidean distance between cluster centers for each pair of clusters.
+2.  Distance from the center of each cluster to the center of the other clusters is calculated.
 
     ![](https://cdn-images-1.medium.com/max/800/1*HtFg6se9Yzdt8jE5zRnLmw.png)
 
-3.  find most similar cluster: for each pair of clusters, calculate similarity d(i, j) between two clusters, as defined in previous answer. Sum up maximum similarity between each cluster and its most similar cluster. Divide sum by number of clusters to obtain Davies-Bouldin index.
+3.  For each cluster, the value that is most similar to itself, i.e. the minimum distance between the centers, is found. The sum of the values of these two clusters calculated in the first step is divided by the distance between the centers of these two clusters. Thus, the most similar cluster is found for each cluster. Then, these values of all clusters are summed and divided by the number of clusters to calculate the Davies-Bouldin coefficient of that clustering.
 
-Davies-Bouldin index ranges from 0 to infinity, with a lower value indicating a better clustering solution. A DBI of 0 indicates that there is no similarity between any two clusters, while a high DBI value indicates that there is a high level of similarity between some of clusters.
+Davies-Bouldin index takes values between 0 and infinity, with a lower value indicating a better clustering. A value of 0 indicates that there is no similarity between any two clusters, while a higher value indicates a high level of similarity between some clusters.
 
-Just like Calinski-Harabasz method, there is no visualization function in R as for Davies-Bouldin method. For this reason, I will write a function that calculates and visualizes Davies Bouldin value for clusters 2 to 10 using `NbClust` function in `NbClust` package.
+Just like the Calinski-Harabasz method, there is no visualization function in R for the Davies-Bouldin method. Therefore, let's write a function that calculates and visualizes the Davies Bouldin value for clusters between 2 and 10 using `NbClust` function in `NbClust` package.
 
 ```{r}
 library(NbClust)
@@ -246,27 +227,25 @@ fviz_db <- function(data) {
 fviz_db(df)
 ```
 
-Unlike other methods, we see that Davies-Bouldin's suggestion for number of clusters is 7. Although it gives different results in this data set, it can give more reliable results in other data sets. For this reason, it would be useful to include Davies-Bouldin method in every clustering analysis.
+Unlike other methods, Davies-Bouldin's recommendation for the number of clusters is 7. Although it gives different results in this data set, it may give more reliable results in other data sets. Therefore, it would be useful to include the Davies-Bouldin method in every clustering analysis.
 
 ## 2.6. Dunn Index
 
-Dunn index is a measure of compactness and separability of clusters in a clustering solution. It is calculated as ratio of minimum separation to maximum diameter. [8]
+Dunn's index is a measure of the compactness and separation of clusters in a cluster analysis [8] and is calculated in the following three steps: [8]
 
-steps to perform Dunn Index are:
-
-1.  calculate minimum separation: smallest distance between observations from two different clusters.
+1.  By calculating the differences between observations belonging to two different clusters, the closest observation in different clusters is calculated. This is called minimum separation.
 
     ![](https://cdn-images-1.medium.com/max/800/1*EHsIVbk6_82UuuxrKn602Q.png)
 
-2.  calculate maximum diameter: maximum distance between observations in same cluster.
+2.  By calculating the distance between observations in the same cluster, the distance between the two most distant observations is calculated and this is called the maximum diameter.
 
     ![](https://cdn-images-1.medium.com/max/800/1*Fl9-NiLKg17SXiz71CMHDw.png)
 
-3.  divide minimum separation by maximum diameter.
+3.  Dunn Index is calculated by dividing the minimum separation by the maximum diameter.
 
 Dunn index ranges from 0 to infinity, with a higher value indicating a better clustering solution. A value of 1 indicates that clusters are perfectly separated and perfectly compact, while a low value indicates that clusters are either not separated or not compact.
 
-Just like Calinski-Harabasz and Davies- Bouldin methods, there is no visualization function in R as for Dunn Index. For this reason, I will write a function that calculates and visualizes Dunn Index values for clusters 2 to 10 using `dunn` function in `clValid` package.
+Just like the Calinski-Harabasz and Davies-Bouldin methods, there is no visualization function in R for the Dunn Index. Therefore, let's write a function that calculates and visualizes Dunn Index values for sets from 2 to 10 using `dunn` function in `clValid` package.
 
 ```{r warning=FALSE}
 library(clValid)
@@ -965,13 +944,10 @@ The steps to calculate MVI are:
 1.  Compute the contingency matrix that counts the number of observations in the same cluster for both clustering solutions.
 
 2.  Compute the entropy for each clustering solution using the formula:
-   
-   \[\sum_{k=1}^{n_k}p(k)log(p(k))\]
-    where \[p_k\] is the proportion of observations in the k-th cluster.
 
-3.  Compute Meila's VI as: 
-    \[VI=H^1+H^2-2*I\]
-     where \[H^1\], \[H^2\] are the entropies of the two clustering solutions, and I is the mutual information between the two clustering solutions.
+$$\sum_{k=1}^{n_k}p(k)log(p(k))$$ where $$p_k$$ is the proportion of observations in the k-th cluster.
+
+3.  Compute Meila's VI as: $$VI=H^1+H^2-2*I$$ where $$H^1$$, $$H^2$$ are the entropies of the two clustering solutions, and I is the mutual information between the two clustering solutions.
 
 ### 7.3.1. Meila's Variation of Information in R
 
