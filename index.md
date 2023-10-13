@@ -18,15 +18,11 @@
   - [k-means and k-medoids cheat
     sheet](#k-means-and-k-medoids-cheat-sheet)
 - [5. Hierarchical Clustering](#5-hierarchical-clustering)
-  - [5.1. Ward’s Minimum Variance
-    Linkage](#51-wards-minimum-variance-linkage)
-  - [5.2. Cophenetic Distance](#52-cophenetic-distance)
-  - [5.3. Cophenetic Distance in R](#53-cophenetic-distance-in-r)
-  - [5.4. Ward’s Minimum Variance Method in
-    R](#54-wards-minimum-variance-method-in-r)
-  - [5.5. Average Linkage Method](#55-average-linkage-method)
-    - [5.5.1. Average Linkage Method in
-      R](#551-average-linkage-method-in-r)
+  - [5.1. Cophenetic Distance](#51-cophenetic-distance)
+  - [5.1.1. Cophenetic Distance in R](#511-cophenetic-distance-in-r)
+  - [5.2. Ward’s Minimum Variance Method in
+    R](#52-wards-minimum-variance-method-in-r)
+  - [5.4. Average Linkage Method in R](#54-average-linkage-method-in-r)
   - [hierarchical clustering cheat
     sheet](#hierarchical-clustering-cheat-sheet)
 - [6. Density Based Clustering](#6-density-based-clustering)
@@ -558,52 +554,41 @@ alt="k-determination-cheat-sheat" />
 
 # 3. k-means Clustering
 
-center of each cluster, or centroid, in k-means clustering corresponds
-to mean of points allocated to cluster. fundamental principle of k-means
-clustering is to define clusters with goal of minimizing total
-intra-cluster variation, also referred to as total within-cluster
-variation. Various k-means algorithms are available. common approach is
-Hartigan-Wong algorithm (1979), which sums squared distances between
-items and matching centroid to determine total within-cluster
-variation\[1\],\[2\],\[3\]. most crucial point in k-means is to decide
-cluster number k. There are lots of methods to determine optimum number
-of cluster, however, you can see most common ones in chapter two.
-
-Mathematical formula of k-means is as follows:
-
-![](https://miro.medium.com/v2/resize:fit:640/format:webp/1*VHABEGVOjy9ZiTKz2l5XOA.png)
-
-where:
-
-- xi is a data point belonging to cluster Ck
-
-- μk is mean value of points assigned to cluster Ck
-
-steps to perform k-means clustering are:
-
-**Step 1:**
-
-Select k, number of clusters, that you want to form in data. Chapter 2
-is dedicated to this step.
-
-**Step 2:**
-
-Select k random points from data set as initial centroids (cluster
-center).
-
-As first assume we have a data like follows:
+The clusters that emerge after any cluster analysis usually contain
+multiple observations. The combination of these multiple observations
+forms clusters. In order for clustering algorithms to detect these
+clusters, clusters need to be represented. k-means clustering algorithm
+considers the cluster center as the average of all observations in that
+cluster. Its main principle is to minimize the intra-cluster variance
+\[1\], \[2\]. Although there are many variants of k-means, the
+Hartigan-Wong algorithm, which is also included by default in k-means
+functions in programming languages such as Python and R, is the most
+widely preferred variant of k-means, which is also described in this
+chapter. k-means clustering algorithm is a partitioning-based clustering
+algorithm like k-medoids, which will be described in the next section.
+Below you can see step by step, with illustrations, how k-means are
+calculated. In the first illustration, let’s see what the example
+dataset we will use looks like:
 
 ![](https://miro.medium.com/v2/resize:fit:720/0*pJDM6rCwC9L5JipM)
 
-We need to select, as first step assumes, a random points to be cluster
-center. This will look like following:
+**Step 1:**
+
+The number of clusters is decided. The second chapter is devoted
+entirely to this topic, so if you skipped that chapter, you can come
+back to it.
+
+**Step 2:**
+
+From the dataset, k random observations are selected as cluster centers.
+This step can be illustrated as follows.
 
 ![](https://miro.medium.com/v2/resize:fit:720/0*CSgBnWMfH9x0nF-m)
 
 **Step 3:**
 
-Assign each observation to cluster whose centroid is closest to it. We
-will start to assign each point as follows.
+Each observation is assigned to the cluster of the cluster center
+closest to it. We will start assigning each observation as follows.
 
 ![](https://miro.medium.com/v2/resize:fit:720/0*sdznnu0uK86FnD9P)
 
@@ -613,65 +598,71 @@ At end of this step, our process will look like follows.
 
 **Step 4:**
 
-Recalculate centroids as mean of all observations in each cluster.
-Consider last step. All of points in data is clustered. At this step, we
-are calculating new centroids as follows.
+In the third step, after the assignment of each observation, the
+observations in the clusters are averaged. These average values form the
+centers of the new clusters as follows.
 
 ![](https://miro.medium.com/v2/resize:fit:720/0*N_2eU_8ZhPeeaL-F)
 
 **Step 5:**
 
-Repeat steps 3 and 4 until cluster assignments no longer change or reach
-a maximum number of iterations. At end of these iterations our
-clustering will look like follows:
+Repeat steps 3 and 4 until the cluster assignments no longer change or
+we reach the maximum number of iterations. At the end of these
+iterations our clustering will look as follows:
 
 ![](https://miro.medium.com/v2/resize:fit:720/0*6G4K1Pq9PgTCPfaH)
 
 ## 3.1. Data Preparation for k-means
 
 In general, data preparation for a cluster analysis in unsupervised
-learning should go as follows:
+learning should be as follows:
 
-1.  Missing values in data should be eliminated/estimated.
+- Missing values in the data set should be removed or filled.
 
-2.  To make variables comparable, data must be scaled or normalized.
-    process of standardization entails altering variables so that their
-    means are 0 and standard deviations are 1.\[4\]
+- Outliers in the data set should be removed if they need to be
+  removed(!).
 
-3.  PCA can help to enhance performance of a clustering algorithm by
-    transforming data into a new coordinate system that better separates
-    underlying clusters. This can lead to more accurate and meaningful
-    results, especially for data sets with complex structures. \[5\]
+- The main calculation in clustering algorithms is distance calculation.
+  Distance calculations can be affected by different scales. The data
+  set should be standardized to avoid being negatively affected by these
+  scale differences \[4\].
 
-4.  PCA can be used to reduce number of features in a high-dimensional
-    data set, which can help improve performance of a clustering
-    algorithm. By reducing dimensionality, PCA can also help to reduce
-    noise and eliminate multicollinearity in data, making it easier to
-    interpret results of a clustering analysis.\[6\]
+- Principal component analysis can help improve the performance of a
+  clustering algorithm by transforming the data into a new coordinate
+  system that better separates the underlying clusters. This can lead to
+  more accurate and meaningful results, especially for datasets with
+  complex structures. \[5\]
+
+- Principal component analysis can be used to reduce the number of
+  variables in a high-dimensional data set, which can help improve the
+  performance of a clustering algorithm. By reducing the dimensionality,
+  principal component analysis can also help reduce noise and eliminate
+  multicollinearity in the data, making it easier to interpret the
+  results of a clustering analysis\[6\].
 
 ## 3.2. k-means in R
 
 There are many packages and functions available to implement k-means
 algorithm in R. In this article, I will show you `kmeans` function in
-`stats` package and `eclust` function in `factoextra` package. I will
-again use [Breast Cancer
+`stats` package and `eclust` function in `factoextra` package.
+
+We will again use [Breast Cancer
 Wisconsin](https://archive.ics.uci.edu/ml/datasets/breast+cancer+wisconsin+(diagnostic))
-data set from UCI Machine Learning Repository.
+data set from UCI Machine Learning Repository. Dataset contains various
+information of tumor cells labeled as benign or malignant. There are 569
+observations and 32 variables. However, some variables are averages of
+other variables. Therefore, these variables were removed from the
+dataset. In addition, variables related to ID and label information were
+also removed. Given the high correlation and high dimensionality between
+pairs of variables, principal component analysis was applied to the
+dataset, this step is not included as it is not the subject of this
+chapter. The last section will cover how these steps were performed.
 
-data set contains information about tumor cells. task in this project
-was to extract variable containing information labeled as benign or
-malignant from data set and cluster tumors as benign or malignant using
-clustering algorithms. There are 569 observations and 32 variables in
-data set. However, some variables are mean of other variables. Thus,
-these variables are removed from data set. Moreover, ID and variable
-about class information is also removed. Given high correlation between
-pairs of variables and high dimension, I applied PCA to data set. I have
-not included this step as it is not subject of this chapter.
-
-From Chapter 2, you will remember that we compared cluster number
-determination methods on same data set. All methods predominantly
-suggested two cluster numbers. That is why we will cluster data for 2
-clusters.
+  
+In the second chapter, we tried to determine the number of clusters
+using the same dataset, and we saw that most of the methods suggested 2
+as the number of clusters. For this reason, the number of clusters is
+assumed to be two when using k-means and other clustering algorithms.  
 
 We do clustering with `kmeans`function and then we store clustering
 result in `km_data`object. Then we print this object with
@@ -719,18 +710,24 @@ print(km_data)
     ## [1] "cluster"      "centers"      "totss"        "withinss"     "tot.withinss"
     ## [6] "betweenss"    "size"         "iter"         "ifault"
 
-When we examine output, we first see how many elements there are for
-each cluster. It is noticed that there are 398 observations in first
-cluster and 171 observations in second cluster. It is possible to say
-that this is unbalanced. Then cluster means section appears. In this
-section, we see values taken by centroids of each cluster. Since k-means
-takes centroids as mean of cluster, it would not be wrong to say that we
-see means of clusters. In clustering vector section, we see to which
-cluster each observation in data set is assigned. Each clustering
-algorithm assigns cluster names as 1,2,3…. last section shows within
-cluster sum of squares values for each cluster. This is an important
-value for explanatory power of clustering. We want it to be as high as
-possible.
+When we examine the output, we first see how many elements there are for
+each cluster. There are 398 observations in the first cluster and 171
+observations in the second cluster. It is possible to say that this is
+unbalanced. Then we see the cluster averages section. In this section,
+we see the values of the centers of each cluster. In the clustering
+vector section, we see to which cluster each observation in the dataset
+is assigned. Each clustering algorithm assigns cluster names in the
+order 1,2,3. Since we have two clusters in this clustering analysis, we
+named the clusters as 1 and 2. The last section shows the intracluster
+sum of squares values for each cluster. We want these values to be close
+to each other. We also obtain the explanatory power of clustering by
+dividing the sum of squares between clusters by the total sum of
+squares. We want it to be as high as possible. The last section shows
+what information we can access with our clustering result using an
+object called km_data. We can access this information by adding the \$
+sign at the end of the object name. For example, by entering
+km_data\$cluster, we get a vector containing information about which
+cluster each observation is assigned to.  
 
 Of course, it is quite possible to make a more detailed comment on this
 output. But this is not our only option. We can visualize clustering
@@ -745,7 +742,7 @@ fviz_cluster(km_data,# clustering result
              data = pcadata, # data 
              ellipse.type = "convex", 
              star.plot = TRUE, 
-             repel = TRUE, 
+             repel = F, 
              ggtheme = theme_minimal()
 ) 
 ```
@@ -864,53 +861,49 @@ on Machine learning. 2004.
 
 # 4. k-medoids Clustering
 
-k-medoids is a clustering algorithm that is similar to k-means, but
-instead of using the mean of the observations in each cluster as the
-centroid, it uses one of the observations in the cluster as the center
-of the cluster(or *medoid*). The main idea behind k-medoids is to define
-clusters where the total dissimilarity between observations and the
-medoid is minimized. k-medoids algorithm is also known as Partitioning
-Around Medoids (PAM) algorithm.\[1\], \[2\]
-
-The steps to perform k-medoids clustering are:
+k-medoids clustering algorithm is a partitioning algorithm that is very
+similar to k-means clustering algorithm. As you may recall from the
+previous section, in the k-means clustering algorithm, each cluster is
+represented by the average of its elements. In the k-medoids algorithm,
+each cluster is represented by one of its elements. In other words, each
+cluster is formed with one of its elements in the center. The main goal
+of the k-medoids clustering algorithm, also called Partitioning Around
+Medoids, is to minimize the distance between medoids and other
+observations as much as possible \[1\], \[2\].  
+  
+Since the k-medoids algorithm is very similar to k-means, I will use the
+illustrations used in k-means. However, at this point, attention should
+be paid to the fourth step. Please pay attention to what is written in
+the fourth step when analyzing the following steps.
 
 **Step 1:**
 
-Select k, the number of clusters, that you want to form in the data. As
-I mentioned before, k-medoids and k-means are very similar algorithms.
+The number of clusters is determined.
 
 **Step 2:**
 
-Select k random observations from the data set as the initial medoids.
-This is another similarity with k-means. Thus, I will use the same
-illustration.
-
-At first, we have a data like the following:
-
-![](https://cdn-images-1.medium.com/max/800/0*u9J4F8icGswpiBbY)
-
-After the second step, we have the following:
+From the dataset, k random observations are selected as cluster centers.
+This step can be illustrated as follows.
 
 ![](https://cdn-images-1.medium.com/max/800/0*Swcrqpf-F1CiixE3)
 
 **Step 3**
 
-Assign each observation to the cluster whose medoid is closest to it
-based on a distance metric. This is again the same as k-means. After the
-third step we will have the following:
+Each observation is assigned to the cluster belonging to the cluster
+center closest to it. We will start assigning each observation as
+follows.
 
 ![](https://cdn-images-1.medium.com/max/800/0*3lBv0CioAbVpOTQu)
 
 **Step 4**
 
-Recalculate the medoids as the observation in each cluster that
-minimizes the total dissimilarity to the other observations in the same
-cluster. This is where the difference between k-means and k-medoids
-occurs. As I mentioned in the previous post, in the k-means algorithm we
-are ecalculating the centroids as the mean of all the observations in
-each cluster. But when it comes to k-medoids, we are recalculate the
-medoids as the observation in each cluster that minimizes the total
-dissimilarity to the other observations in the same cluster.
+This step is where the k-means and k-medoids algorithms diverge. In
+k-means, the center is the averages, while in k-medoids the center is
+chosen as the observation closest to all observations in that cluster.
+In the illustration below, assume that the darker of the newly selected
+asterisked points is another observation:
+
+![](https://miro.medium.com/v2/resize:fit:720/0*N_2eU_8ZhPeeaL-F)
 
 **Step 5**
 
@@ -972,22 +965,16 @@ print(pam_data)
 
 If we examine the output obtained with the print function; at first we
 can access the medoid information of each cluster for both PC1 and PC2
-dimensions. In addition, we can also see how many observations are in
-each cluster. As a result of this analysis, there are 499 observations
-in the first cluster and 269 elements in the second cluster. The medoid
-of the first cluster is (-2.357211, 0.30131315). The second cluster’s
-medoid is (1.358672, 0.03762238). Then we see the clustering vector,
-which contains the information to which cluster each observation is
-assigned. Finally, we see the objective function. build represents the
-first step that I explained in the step-by-step calculation section and
-swap represents the third step.
+dimensions. We notice that the center of the first cluster is the
+observation with the 499th index in the dataset, while the second
+cluster is the observation with the 269th index. Next, we see the
+clustering vector, which contains the information to which cluster each
+observation is assigned. Finally, we see the objective function. “Build”
+represents the first step in the k-median calculation and “Swap”
+represents the third step.  
 
-Of course, it is quite possible to make a more detailed comment on this
-output. But this is not our only option. We can visualize the clustering
-result with `fviz_cluster` function in the `factoextra` package. Since
-`factoextra` package uses `ggplot2` package for all visualizations, you
-can make the same changes to ggplot2 plots that you can make to the
-graphs you plot with `fviz_cluster` function.
+Just as with k-means, we can use the fviz_cluster function in the
+factoextra package to plot the cluster graph as follows:
 
 ``` r
 library(factoextra)
@@ -1025,45 +1012,35 @@ aria-hidden="true">k-means-and-k-medoids-cheat-sheet</figcaption>
 
 # 5. Hierarchical Clustering
 
-Hierarchical Clustering is a method of clustering in which the objects
-are organized into a tree-like structure called a dendrogram. The main
-idea behind hierarchical clustering is to start with each object as a
-separate cluster and then combine them into larger clusters iteratively
-based on their similarity. There are two main types of hierarchical
-clustering: Agglomerative and Divisive. \[1\], \[2\], \[3\]
-
-**Step by Step — Agglomerative Hierarchical Clustering**
-
-1.  Start with each object as a separate cluster
-
-2.  Find the two most similar clusters and combine them into a new
-    cluster
-
-3.  Repeat step 2 until all objects are in the same cluster
-
-**Step by Step — Divisive Hierarchical Clustering**
-
-1.  Start with all objects in the same cluster
-
-2.  Divide the largest cluster into two smaller clusters based on their
-    similarity
-
-3.  Repeat step 2 until each object forms its own cluster
-
-In hierarchical clustering, there are several linkage methods that can
-be used to determine the distance between clusters. These linkage
-methods include:
+Hierarchical Clustering is an algorithm in which objects are organized
+in a tree-like structure of clusters, called a dendrogram. There are two
+main types of hierarchical clustering: Agglomerative and Divisive.
+\[1\], \[2\], \[3\] While Divisive Hierarchical Clustering considers the
+dataset as a single cluster and then iteratively decomposes it into
+smaller clusters based on their similarities, Agglomerative Hierarchical
+Clustering considers each observation as a cluster and then iteratively
+merges them into larger clusters based on their similarities. At this
+point, the important part is how these merges/separations are made.
+Various linkage methods have been developed for this purpose. Below you
+can see the names of these linkage methods and how the linking
+operations are performed:  
 
 1.  Single linkage: Also known as the nearest-neighbor method, this
     method calculates the distance between the closest points of the two
     clusters being merged. \[4\]
 
+    ![](https://ozturkfemre.github.io/denetimsiz_ogrenme/images/ScreenShot%20Tool%20-20231013135226.png)
+
 2.  Complete linkage: Also known as the farthest-neighbor method, this
     method calculates the distance between the furthest points of the
     two clusters being merged.\[5\]
 
+    ![](https://ozturkfemre.github.io/denetimsiz_ogrenme/images/ScreenShot%20Tool%20-20231013135433.png)
+
 3.  Average linkage: This method calculates the average distance between
     all pairs of points in the two clusters being merged. \[6\]
+
+    ![](https://ozturkfemre.github.io/denetimsiz_ogrenme/images/ScreenShot%20Tool%20-20231013135623.png)
 
 4.  Ward’s Minimum Variance linkage: This method minimizes the variance
     of the distances between points within the same cluster. It merges
@@ -1077,55 +1054,21 @@ most appropriate for the data and the specific problem being addressed.
 In this book, two metrics which are Ward’s Minimum Variance Method and
 Average linkage method is used.
 
-## 5.1. Ward’s Minimum Variance Linkage
+## 5.1. Cophenetic Distance
 
-Ward linkage is a hierarchical clustering method that aims to minimize
-the variance of the distances between points within the same cluster. It
-merges the clusters that result in the smallest increase in the total
-sum of squared distances within each cluster.
+In the previous sections, we mentioned that Euclidean metric is usually
+used in distance metric applications. In the case of hierarchical
+clustering, we can also use Cophenetic distance to decide on the
+distance metric. Cophenetic distance is a measure used in hierarchical
+clustering to evaluate the similarity between two observations in the
+dendrogram produced by the clustering algorithm. It is defined as the
+distance between two observations in the original data space at the
+level where they first merge into the same cluster in the dendrogram
+\[8\]. A high correlation between the cophenetic distance and the
+original distance between observations in the data space indicates that
+the clustering solution preserves the structure of the data well.
 
-To understand how Ward linkage works, let’s assume we have n data points
-and we start with each point in its own cluster. At each step, we merge
-the two clusters that result in the smallest increase in the total sum
-of squared distances within each cluster.
-
-The first step in Ward linkage is to calculate the centroids of each
-individual point, since each point starts as its own cluster. Then, we
-calculate the pairwise distances between each centroid. Next, we merge
-the two clusters with the smallest value of the total sum of squared,
-and calculate the new centroid of the merged cluster. We repeat this
-process until all the points are in a single cluster.
-
-As mentioned in the previous chapters, there are lots of distance
-metrics that are used in clustering analysis. In the case of
-Hierarchical Clustering, there is a way to decide distance metric which
-is called cophenetic distance.
-
-## 5.2. Cophenetic Distance
-
-Cophenetic distance is a measure used in hierarchical clustering to
-evaluate the similarity between two observations in the dendrogram
-produced by the clustering algorithm. It is defined as the distance
-between two observations in the original data space at the level in the
-dendrogram where they first merge into the same cluster\[8\].
-
-Cophenetic distance is calculated as follows:
-
-1.  Perform hierarchical clustering on the data to produce a dendrogram
-
-2.  For each pair of observations, find the level in the dendrogram
-    where they first merge into the same cluster.
-
-3.  Compute the distance between the two observations in the original
-    data space. Repeat steps 2 and 3 for all pairs of observations.
-
-Cophenetic distance is used to evaluate the quality of the clustering
-solution by comparing it to the original data space. A high correlation
-between cophenetic distance and the original distance between
-observations in the data space indicates that the clustering solution is
-preserving the structure of the data well.
-
-## 5.3. Cophenetic Distance in R
+## 5.1.1. Cophenetic Distance in R
 
 There are many packages and functions available to implement k-means
 algorithm in R. In this article, I will show you cophenetic function in
@@ -1180,29 +1123,22 @@ and distance matrix is examined, it is observed that hierarchical
 clustering with Euclidean distance gives better results. That’s why we
 will continue the analysis with Euclidean distance metric.
 
-## 5.4. Ward’s Minimum Variance Method in R
+## 5.2. Ward’s Minimum Variance Method in R
 
-Hierarchical clustering can be represented by a dendrogram, which is a
-tree-like structure that shows the hierarchy of clusters and the
-relations between them. The dendrogram can be cut at a certain height to
-obtain a flat clustering solution with a specific number of clusters. To
-determine the number of clusters, as we did in the k-means and
-k-medoids, we can use methods to determine the optimal number of
-clusters.
-
-Since we covered in Chapter 2, it will not be mentioned in this chapter.
-However, it can be stated that all of the methods suggested 2 as the
-optimal number of cluster.
-
-As mentioned before, another way for hierarchical clustering is to check
-the dendogram to decide where to cut it in order to decide the optimal
-number of cluster. However, I, personally, find this method “open-ended”
-which I do not think it to be a case for the optimal number of cluster.
-Nevertheless, I will share codes and dendogram with you.
+To determine the number of clusters in hierarchical clustering, we can
+use methods to determine the optimal number of clusters, just as we do
+with k-means and k-medoids. This is discussed in Section 2 and will not
+be discussed in this section. However, it may be useful to remind that
+all methods recommend 2 as the optimal number of clusters.  
+  
+Another way to determine the number of clusters for hierarchical
+clustering is to check the dendogram and decide where to cut. However, I
+personally find this method “open-ended” but I will share the codes and
+the dendogram with you.  
 
 You can use `fviz_dend` function in `factoextra` package to visualise
 dendogram of a hierarchical clustering with the object you created from
-hierarchical clustering with the function hclust from `stats` package.
+hierarchical clustering with the function `hclust` from `stats` package.
 
 ``` r
 hc_e <- hclust(d=dist_euc, method="ward.D2")
@@ -1254,7 +1190,7 @@ fviz_dend(hc_e, # clustering result
           k = 2, # cluster number
           cex = 0.5, 
           color_labels_by_k = TRUE, 
-          rect = TRUE )
+          rect = F )
 ```
 
 ![](index_files/figure-gfm/unnamed-chunk-21-1.png)<!-- -->
@@ -1277,41 +1213,13 @@ seen that the separation occurs only in both PC1 and PC2. While the
 variance in the first cluster shown in red is high, the variance in the
 second cluster shown in green is low.
 
-## 5.5. Average Linkage Method
-
-Average linkage, also known as UPGMA (Unweighted Pair Group Method with
-Arithmetic Mean), is a hierarchical clustering method that calculates
-the distance between clusters as the average distance between all pairs
-of points in the two clusters being merged.
-
-To understand how average linkage works, let’s assume we have n data
-points and we start with each point in its own cluster. At each step, we
-merge the two clusters that have the smallest average distance between
-all pairs of points.
-
-The first step in average linkage is to compute the pairwise distances
-between all of the data points. This can be done using any distance
-metric, such as Euclidean distance or Manhattan distance. Next, we
-compute the average distance between all pairs of points in each
-cluster. We then merge the two clusters with the smallest average
-distance, and update the pairwise distances between the new merged
-cluster and the remaining clusters.
-
-One of the advantages of average linkage is that it tends to produce
-clusters that are well-separated and roughly equal in size. However, it
-can also be sensitive to outliers, since it takes the average of all
-pairwise distances between clusters.
-
-### 5.5.1. Average Linkage Method in R
+## 5.4. Average Linkage Method in R
 
 Since cophenetic distance is covered in the Ward’s Minimum Variance
 Method, it will not be shared with you in this part. However, it is
 necessary to state that Euclidean distance again gave the better
-results. In addition, methods to determine optimal number of clusters,
-again, suggested 2 as the optimal number of clusters.
-
-Again, you can use `fviz_dend` function in `factoextra` package to
-visualise dendogram of a hierarchical clustering with the object you
+results. Again, you can use `fviz_dend` function in `factoextra` package
+to visualise dendogram of a hierarchical clustering with the object you
 created from hierarchical clustering with the function `hclust` from
 stats package.
 
@@ -1388,7 +1296,7 @@ package:
 ``` r
 fviz_cluster(list(data = pcadata, cluster = grupav2),
              ellipse.type = "convex", 
-             repel = TRUE, 
+             repel = F, 
              show.clust.cent = FALSE, ggtheme = theme_minimal())
 ```
 
@@ -2129,7 +2037,7 @@ be visualized.
 fviz_pca_ind(data.pca,#an object of class PCA
              col.ind = "cos2",  # the colors for individuals are automatically controlled by their qualities of representation ("cos2"),
              gradient.cols = c("#00AFBB", "#E7B800", "#FC4E07"), # vector of colors to use for n-colour gradient.
-             repel = TRUE #  whether to use ggrepel to avoid overplotting text labels or not.   
+             repel = F #  whether to use ggrepel to avoid overplotting text labels or not.   
 )
 ```
 
@@ -2153,7 +2061,7 @@ visualized.
 fviz_pca_var(data.pca,
              col.var = "contrib", 
              gradient.cols = c("#00AFBB", "#E7B800", "#FC4E07"),
-             repel = TRUE     )
+             repel = F     )
 ```
 
 ![](index_files/figure-gfm/unnamed-chunk-45-1.png)<!-- -->
