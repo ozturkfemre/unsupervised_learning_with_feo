@@ -21,6 +21,6 @@ You can also find cheat sheets at the end of each chapter.
 
 You can access the booklet using [this link](https://ozturkfemre.github.io/unsupervised_learning_with_feo/).
 
-At the end of the booklet you will find a section entitled Exercises. In this section you are expected to apply all the topics covered in this booklet using the R programming language. You can find the answer key by sending me a private message on [Linkedin](https://www.linkedin.com/in/ozturkfemre/).
+At the end of the booklet you will find a section entitled Exercises. In this section you are expected to apply all the topics covered in this booklet using the R programming language. You can find the answer key by sending me a message on [Linkedin](https://www.linkedin.com/in/ozturkfemre/).
 
 May the algorithms be with you!
