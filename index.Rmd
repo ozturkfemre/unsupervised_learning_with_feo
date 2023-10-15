@@ -671,67 +671,32 @@ fviz_cluster(list(data = pcadata, cluster = grupav2),
 
 # 6. Density Based Clustering
 
-Density-based clustering is a type of clustering algorithm that groups together data points that are closely packed together, while separating those that are more sparsely distributed. The main idea behind density-based clustering is to identify regions in the feature space where the data points are dense, and then to extract clusters based on these regions. [1]
+Beautiful weather, no work/school, you drive your car with your friends/family to a countryside. As you breathe the beautiful air into your lungs, you feel a little hungry. You take out the homemade strawberry jam and peanut butter from your bag along with the bread. Unfortunately, some of the jam spills on the ground. What are the possible situations you might encounter? Most likely a swarm of ants would make their way to the jam, and there would even be a concentration of ants at the spot where the jam spilled. Density-based clustering is a clustering algorithm that brings together ants that are closer together in a circle of a certain radius and separates the ants that have not yet reached the jam, and the ants that are approaching the jam, which are more sparse. The main idea behind density-based clustering is to identify regions in the feature space where data points are dense and then infer clusters based on these regions[1]. Density-based clustering defines clusters as regions of dense points separated from other dense regions by regions with a lower density of points[2]. The difference with all other clustering algorithms is that while all other algorithms assign all observations to a cluster, in density-based clustering some observations may not be assigned to a cluster.\
+\
+Another difference between density-based clustering and the other algorithms described in this book is that the number of clusters does not need to be determined in advance. However, two parameter which are MinPts and eps need to be predetermined. eps parameter defines the radius of the circle around an observation. This is also called the epsilon neighborhood of the observation. MinPts parameter is the minimum number of neighbors within the "eps" radius. In other words, it determines how many observations to include in the circle. KNN distplot can be used to determine these values. In the application part, we will see how these values are decided with KNN distplot.\
+\
+Density-based clustering algorithm results in three different types of observations ( seed points, border points and noise points) when observations are clustered or not clustered. A seed point is a point with the fewest MinPts in its epsilon neighborhood. In other words, it has a sufficient number of close neighbors to be considered part of a cluster. A border point is a point that is not a seed point but is within the epsilon neighborhood of a seed point. Boundary points can be considered as part of a cluster, but they are not as strongly connected to the cluster as seed points. A noise point is a point that does not have any seed points within its epsilon neighborhood. Noise points are usually considered outliers and are not part of any cluster. It is precisely in the formation of noise points that Density Based Clustering differs from other clustering algorithms.\
+\
+Following steps may be more useful for understanding Density Based Clustering:
 
-One commonly used density-based clustering algorithm is DBSCAN (Density-Based Spatial Clustering of Applications with Noise). DBSCAN groups together data points that are close to each other based on a distance measure and a density threshold. It defines clusters as dense regions of points that are separated from other dense regions by regions of lower point density. [2]
+1.  MinPts and epsilon values are determined.
 
-In density-based clustering, the number of clusters does not need to be predetermined, but the values of MinPts and eps do. Thus, it is important to know what these two parameter means.
+2.  Boundary points are defined.
 
-The ***eps*** parameter defines the radius of the neighbors around a point x. This is called the epsilon neighborhood of x.
+3.  Starting from a core point, all observations within the epsilon neighborhood are found and assigned to the same cluster. This process repeats for each core point and observations are added to the same cluster as long as they are within epsilon distance of another observation in the cluster.\
 
-The ***MinPts*** parameter is the minimum number of neighbors within the "eps" radius. KNN distplot can be used to determine these values.
+4.  The algorithm outputs the identified clusters.
 
-In the DBSCAN (Density-Based Spatial Clustering of Applications with Noise) algorithm, there are three types of points: core points, border points, and noise points.
-
--   A core point is a point that has at least MinPts within its epsilon neighborhood. In other words, a core point has enough nearby neighbors to be considered as part of a cluster.
-
--   A border point is a point that is not a core point, but it is within the epsilon neighborhood of a core point. Border points can be considered as part of a cluster, but they are not as strongly connected to the cluster as core points.
-
--   A noise point is a point that does not have any core points within its epsilon neighborhood. Noise points are often considered outliers and are not part of any cluster.
-
-Here are the steps involved in DBSCAN algorithm:
-
-1.  The first step is to define epsilon.
-
-2.  Identify MinPts.
-
-3.  Identify border points: A border point is a point that has fewer than MinPts within its epsilon neighborhood, but is reachable from a core point. These points are often considered part of a cluster but can also be considered noise.
-
-4.  Starting with a core point, the algorithm finds all the points within its epsilon neighborhood and assigns them to the same cluster. It then repeats this process for each core point and continues to add points to the same cluster as long as they are within epsilon distance of another point in the cluster.
-
-5.  Output clusters: The algorithm outputs the clusters that have been identified.
-
-The following gif is beneficial to understand how DBSCAN works:
+\
+All this happens as in the small animation[3] below:
 
 [![](https://cdn-images-1.medium.com/max/800/1*GxaDEsIpj-xbElZVPZH0Hg.gif)](https://ml-explained.com/blog/dbscan-explained)
 
-Just like other clustering algorithms, the DBSCAN algorithm has some advantages and disadvantages. Some of these advantages can be listed as follows:
-
-1.  Density-based clustering algorithms can handle noisy data since they can identify noise points as outliers that do not belong to any cluster.
-
-2.  Unlike some other clustering algorithms, density-based clustering can identify clusters of different shapes and sizes, including irregularly shaped clusters.
-
-3.  Density-based clustering algorithms can automatically determine the number of clusters present in the data, rather than relying on the user to specify the number of clusters.
-
-4.  Density-based clustering can be very efficient for large data sets. However, this has an important issue that will be mentioned in the disadvantages.
-
-Some of the disadvantages can be listed as follows:
-
-1.  Density-based clustering algorithms have some parameters that need to be set manually, such as epsilon and MinPts, and the choice of these parameters can have a significant impact on the clustering results.
-
-2.  Density-based clustering algorithms struggle to handle clusters that have varying densities. If the density of a cluster changes significantly within the cluster or between clusters, it can be difficult for the algorithm to identify the clusters accurately.
-
-3.  Density-based clustering algorithms typically require more memory than some other clustering algorithms, especially when dealing with high-dimensional data sets.
-
-4.  Density-based clustering algorithms can be less effective on data sets with high dimensionality or large numbers of features, as they suffer from the "curse of dimensionality" which can make it difficult to identify meaningful clusters.
-
-Overall, density-based clustering algorithms can be very effective for many clustering tasks, especially when the data has varying densities and shapes. However, it is important to carefully tune the parameters and consider the limitations of the algorithm when applying it to a particular data set.
+To summarize, Density Based Clustering algorithm is particularly useful for data sets with different densities. While hierarchical and partitioning-based algorithms (k-means, k-medoids) only cluster clusters in elliptical shapes, Density Based Clustering has no such restrictions. However, compared to other clustering algorithms, it can be said that it fails more on high-dimensional data.
 
 ## 6.1. Density Based Clustering in R
 
-Just like other clustering algorithms, DBSCAN can be done quite simply through R. There must be other packages, but `dbscan` function in the `fpc` package will be used in this chapter. We will again use the same data set, [Breast Cancer Wisconsin](https://archive.ics.uci.edu/ml/datasets/breast+cancer+wisconsin+%28diagnostic%29) from the UCI Machine Learning Repository in the analysis.
-
-As I said before, in density-based clustering, the number of clusters does not need to be predetermined, but the values of MinPts and eps do. This is why, as a first step we will draw a kNN distplot to decide these parameters.
+Like other clustering algorithms, Density Based Clustering can be done quite simply through R. We can easily do this with \`dbscan\` function in the \`fpc\` package. However, as I mentioned before, MinPts and eps values need to be determined beforehand. Therefore, as a first step, we will draw a kNN distplot to decide these parameters.
 
 ```{r message=FALSE, warning=FALSE}
 library(fpc)
@@ -743,13 +708,7 @@ abline(h = 0.6, lty = 2)
 
 In the code, k stands for MinPts. After several trials, 10 was decided upon. When analyzing the kNNdisplot, just like the Elbow Method, the point where the line makes an "elbow" should be determined. This point should be chosen as the eps value. After various trials, the most appropriate value was decided to be 0.6.
 
-> In the analysis with minPts 10, eps 1, the number of clusters was found to be one. Since one cluster means no cluster, it was decided not to include it in the post.
-
-> The analysis with MinPts 10, eps 0.8 gave the same result as the analysis with eps 1, so it was decided not to include it in the post.
-
-> In the analysis with minPts 5, eps 0.6, the number of clusters was two. While there were 513 observations in the first cluster, the number of observations in the second cluster was 7 and the variance differences caused by this imbalance caused suspicion. For this reason, it was not included in the post.
-
-Having decided on the epsilon and Minpts values, we can now apply DBSCAN with these parameters.
+Now that we have decided on MinPts and eps values, we can do Density Based Clustering:
 
 ```{r}
 db <- fpc::dbscan(df, eps = 0.6, MinPts = 10)
@@ -782,41 +741,25 @@ When the plot is examined, it can be seen that the observation difference betwee
 
 [2] Bäcklund, H., Hedblom, A., & Neijman, N. (2011). A density-based spatial clustering of application with noise. Data Mining TNM033, 33, 11--30.
 
+[3] <https://ml-explained.com/blog/dbscan-explained>
+
 # 7. Cluster Validation
 
-Cluster validation is a measure used to assess the quality of clustering results. Cluster validation is usually divided into two categories: internal cluster validation and external cluster validation.
-
-Internal Cluster validation measures how homogeneous a cluster is within itself and the success of the clustering method. Internal cluster validation measures are related to the clustering algorithm itself and can vary with the number of clusters, cluster size, number of observations and data size. Some of the internal cluster validation measures are as Silhouette Coefficient, Connectivity and Dunn Index.
-
-External cluster validation is measured by comparing clustering results with external data. For example, in a classification problem, clustering results can be compared with actual classes. External cluster validation measures are used to measure the accuracy of clustering results. Examples are the Corrected Rand Index and Meila's Variation of Information (MIV).
-
-In many platforms, such as Kaggle and github, I see that this step is either not done at all, or is skipped with a few metrics reviews. However, I think this step is very important. Cluster validity metrics are used to evaluate clustering results and make comparisons between different clustering methods. It is important to choose an appropriate metric to achieve an accurate clustering result and to ensure the reliability of the results. It is also important to understand clustering metrics in order to correctly interpret and analyze clustering results.
-
-In this chapter, we will cover some cluster validation metrics such as Connectivity, Adjusted Rand Index and Meila's Variation of Information metrics. Since Silhouette, Calinski-Harabasz, Davies-Bouldin, and Dunn Index is covered in Chapter 2 only their code for validation will be explained. Just as always, we will use the same data set, [Breast Cancer Wisconsin](https://archive.ics.uci.edu/ml/datasets/breast+cancer+wisconsin+(diagnostic)) from the UCI Machine Learning Repository in the analysis. For all metrics, we will use k-means clustering for 2 clusters.
+So far we have seen how four different clustering algorithms work, the main ideas behind them, and how they are implemented in the R programming language. But can clustering analysis be a cursory analysis that ends with clustering? If you look at Kaggle, Github and many other platforms, yes. In most analyses, it's very hard to see cluster validity metrics being evaluated. But this is quite problematic. It's just as bad as doing a regression analysis without looking at R\^2, or even worse, doing a regression analysis without checking assumptions. This is why cluster validity is so important.\
+\
+Cluster validity metrics fall roughly into two categories (Internal Cluster Validity and External Cluster Validity). Internal cluster validity measures how homogeneous a cluster is within itself. Since internal cluster validity metrics are related to the clustering algorithm itself, they can vary according to the number of clusters, cluster size, number of observations and data size (number of variables). We have already seen some of the internal cluster validity metrics (Silhouette, Calinski-Harabasz, Davies-Bouldin, Dunn) in chapter two. Therefore, a detailed explanation of how they work will not be repeated here. But we will look at how Connectivity, another internal cluster validity metric, works.\
+\
+External cluster validity is measured by comparing the clustering results with external data. The same is done in a classification problem by comparing the classification results with the actual classes. For this reason, we again need labels to apply external cluster validity metrics. While there are many external cluster validity metrics, in this book we will analyze the Adjusted Rand Index and Meila's Variation of Information metrics.\
+\
+Results of the k-means clustering algorithm with the same data set will be used for all analyses.\
 
 ## 7.1. Connectivity
 
-Connectivity is a measure of the similarity of an observation unit to other observation units in its cluster. It underlies a hierarchical clustering method and plays an important role in the evaluation of clustering results.
-
-Connectivity of a cluster is calculated by averaging the distances between each observation unit in the cluster and all other observation units within the cluster. This measure of connectivity is used to determine how homogeneous the cluster is as a whole and the success of the clustering method. Lower connectivity indicates that a cluster is homogeneous and gives a good clustering result.[1]
-
-There are different ways to calculate connectivity, but a common approach is:
-
-1.  Compute the pairwise distances between all observations in the data set.
-
-2.  For each observation in a cluster, find the closest observation outside the cluster, and calculate the distance between them.
-
-3.  For each observation in a cluster, find the closest observation within the cluster, and calculate the distance between them.
-
-4.  Compare the two distances and assign the observation to the cluster it is closer to.
-
-5.  Repeat the process for all observations in the data set.
-
-6.  Calculate the connectivity for each cluster as the ratio of the number of observations that are closer to other observations within the cluster than to any other observation outside the cluster, to the total number of observations in the cluster.
+Connectivity is calculated by averaging the distances between each observation in the cluster and all other observations in the cluster to which that observation belongs. It is used to determine how homogeneous the cluster is as a whole and the success of the clustering method. A low Connectivity value indicates that a cluster is homogeneous and gives a good clustering result[1].
 
 ### 7.1.1. Connectivity in R
 
-You can easily get your Connectivity value with `connectivity` function from `clValid` package. In the code below, you can find the code required for first k-means clustering and then connectivity calculation.
+Connectivity can be easily calculated with `connectivity` function in the `clValid` package. The inputs to the function are the clustering vector, dataset, number of neighbors (which can be experimentally varied) and the distance metric:
 
 ```{r include=FALSE}
 library(readr)
@@ -849,22 +792,11 @@ connectivity(distance = NULL, k2m_data$cluster, Data = df, neighbSize = 20,
 
 ## 7.2. Corrected Rand Index
 
-Corrected Rand index (CRI) is a measure used to assess the similarity between two different clustering solutions for a given data set. It is a modified version of the Rand index, which measures the proportion of correctly classified observations in both clustering solutions. The corrected Rand index takes into account the chance agreement between the two clustering solutions, and ranges from -1 to 1. Since I do not compare two different clustering solution in this example and we have label information in the data set, I will use the label information to calculate CRI.[2]
-
-The corrected Rand index is calculated as follows:
-
-1.  Compute the pairwise similarity between all observations in the data set.
-
-2.  Compare the two clustering solutions and count the number of pairs of observations that are in the same cluster in both solutions (a), in different clusters in both solutions (b), in the same cluster in one solution and different clusters in the other solution ( c ), and in different clusters in one solution and the same cluster in the other solution (d).
-
-3.  Calculate the corrected Rand index as:\
-    (a + b) / (a + b + c + d) --- ((a + c) \* (a + d) + (b + c) \* (b + d)) / ( (a + b + c + d) \* (a + b + c + d --- 1) )
-
-4.  A higher corrected Rand index value indicates that the two clustering solutions are more similar, and thus the clustering solution is considered to be of higher quality. The corrected Rand index is sensitive to the number of clusters and the number of observations in the data set.
+Corrected Rand index (CRI) is a validity metric that compares two different sets of cluster information. It is a modified version of the Rand index that measures the proportion of correctly classified observations in both clustering solutions. The adjusted Rand index ranges from -1 to 1 and the closer it is to 1, the more successful the result [2].
 
 ### 7.2.1. Corrected Rand Index in R
 
-You can easily get your Corrected Rand Index with the function `cluster.stats` in the `fpc` package. In the code below, you can find the code for corrected rand index calculation.
+Corrected Rand Index can be easily calculated with `cluster.stats` function in `fpc` package. As mentioned before, R labels the clusters resulting from clustering as 1,2,3 respectively. Whatever the label in the data set (the data set used as an example in this book has two labels, M and B), that label needs to be transformed in the same way. This transformation is done in the first line of the code below. Also, `cluster.stats` is a function that calculates many values. In particular, if we want to access the Corrected Rand index, we need to add corrected.rand with a "\$" sign.
 
 ```{r}
 diagnosis <- ifelse(wdbc$Diagnosis == "M",1,2 )# it is necessary to make labels numerical
@@ -873,21 +805,11 @@ cluster.stats(d = dist(df),diagnosis, k2m_data$cluster)$corrected.rand
 
 ## 7.3. Meila's Variation of Information
 
-Meila's variation of information (MVI) is a measure used to assess the similarity between two different clustering solutions for a given data set. It is based on the idea that the similarity between two clustering solutions can be measured by the amount of information that is gained or lost when going from one clustering solution to the other. MVI compares the entropy of each clustering solution, and ranges from 0 to log(n) where n is the number of observations. A lower MVI value indicates that the two clustering solutions are more similar. Again, since I do not compare two different clustering solution in this example and we have label information in the data set, I will use the label information to calculate MVI.[3]
-
-The steps to calculate MVI are:
-
-1.  Compute the contingency matrix that counts the number of observations in the same cluster for both clustering solutions.
-
-2.  Compute the entropy for each clustering solution using the formula:
-
-$$\sum_{k=1}^{n_k}p(k)log(p(k))$$ where $$p_k$$ is the proportion of observations in the k-th cluster.
-
-3.  Compute Meila's VI as: $$VI=H^1+H^2-2*I$$ where $$H^1$$, $$H^2$$ are the entropies of the two clustering solutions, and I is the mutual information between the two clustering solutions.
+Based on the idea that the similarity between two clustering solutions can be measured by the amount of information gained or lost when moving from one clustering to another, Meila's Variation of Information (MVI) metric compares the entropy of each clustering solution and takes values between 0 and log(n), where n is the number of observations. A lower MVI value indicates that the two clustering solutions are less similar [3]. \
 
 ### 7.3.1. Meila's Variation of Information in R
 
-Just as CRI, you can easily do this with the function `cluster.stats` in the `fpc` package. In the code below, you can find the code for MVI calculation.
+Just like Corrected Rand Index, MVI is calculated with the same `cluster.stats` function. Everything that applies to Corrected Rand Index calculation also applies to MVI calculation.
 
 ```{r}
 cluster.stats(d = dist(df),diagnosis, k2m_data$cluster)$vi
@@ -904,7 +826,7 @@ fviz_silhouette(k2m_data, # list containing clustering information
                 ggtheme = theme_classic())
 ```
 
-Since observations with negative silhouette value which can be seen in the cluster 1 which is colored blue in the plot indicates that they might be clustered wrongly, you might want to reach the index numbers of those observation. The following code might help you to get their index numbers:
+Since observations with negative silhouette value, which can be seen in the cluster 1 which is colored blue in the plot, indicate that they might be clustered wrongly. In this case you might want to reach the index numbers of those observation and analyse the issue about them. The following code might help you to get their index numbers:
 
 ```{r}
 sil <- k2m_data$silinfo$widths[, 1:3]
@@ -914,7 +836,7 @@ sil[neg_sil_index, , drop = FALSE]
 
 ## 7.5. Dunn Index
 
-Just as CRI and MVI, you can easily do this with the function `cluster.stats` in the `fpc` package. In the code below, you can find the code for Dunn Index calculation.
+Just as CRI and MVI, you can easily calculate Dunn Index with the function `cluster.stats` in the `fpc` package. In the code below, you can find the code for Dunn Index calculation.
 
 ```{r}
 cluster.stats(dist(df), k2m_data$cluster)$dunn
