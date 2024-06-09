@@ -570,11 +570,7 @@ function that calculates and visualizes Dunn Index values for sets from
 
 ``` r
 library(clValid)
-```
 
-    ## Zorunlu paket yükleniyor: cluster
-
-``` r
 fviz_dunn <- function(data) {
   k <- c(2:10)
   dunnin <- c()
