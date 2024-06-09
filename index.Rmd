@@ -4,6 +4,7 @@ output:
   github_document:
     toc: true
     toc_depth: 2
+    toc_float: true
 ---
 
 ![](images/unsupervised_learning_with_feo.png)
@@ -80,6 +81,24 @@ fviz_nbclust(df, # data
 ```
 
 For example, output above shows that there is no sharp elbow. For this reason, it draws attention as a result open to interpretation. An interpretation based on this elbow may therefore lead to incorrect results.
+
+In Python
+
+```{}
+Sum_of_squared_distances = []
+K = range(1,10)
+for num_clusters in K :
+ kmeans = KMeans(n_clusters=num_clusters, n_init=25)
+ kmeans.fit(pcadf)
+ Sum_of_squared_distances.append(kmeans.inertia_)
+plt.figure(figsize=(10,7))
+plt.plot(K,Sum_of_squared_distances, 'x-')
+plt.xlabel('cluster number') 
+plt.ylabel('Total Within Cluster Sum of Squares') 
+plt.title('Elbow Plot')
+plt.show()
+```
+
 
 ## 2.2. Average Silhouette Method
 
