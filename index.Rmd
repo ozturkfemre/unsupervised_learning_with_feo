@@ -82,7 +82,7 @@ fviz_nbclust(df, # data
 
 For example, output above shows that there is no sharp elbow. For this reason, it draws attention as a result open to interpretation. An interpretation based on this elbow may therefore lead to incorrect results.
 
-In Python
+In Python, we can draw elbow plot
 
 ```{}
 Sum_of_squared_distances = []
@@ -97,6 +97,7 @@ plt.xlabel('cluster number')
 plt.ylabel('Total Within Cluster Sum of Squares') 
 plt.title('Elbow Plot')
 plt.show()
+
 ```
 
 
