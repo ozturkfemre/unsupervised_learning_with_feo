@@ -197,6 +197,21 @@ reason, it draws attention as a result open to interpretation. An
 interpretation based on this elbow may therefore lead to incorrect
 results.
 
+In Python, we can draw elbow plot
+
+    Sum_of_squared_distances = []
+    K = range(1,10)
+    for num_clusters in K :
+     kmeans = KMeans(n_clusters=num_clusters, n_init=25)
+     kmeans.fit(pcadf)
+     Sum_of_squared_distances.append(kmeans.inertia_)
+    plt.figure(figsize=(10,7))
+    plt.plot(K,Sum_of_squared_distances, 'x-')
+    plt.xlabel('cluster number') 
+    plt.ylabel('Total Within Cluster Sum of Squares') 
+    plt.title('Elbow Plot')
+    plt.show()
+
 ## 2.2. Average Silhouette Method
 
 Average silhouette method is a validity metric that measures how well a
