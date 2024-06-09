@@ -97,12 +97,13 @@ dimensionality.
 In the rest of this book, we’ll explore various clustering algorithms
 and learn how Principal Component Analysis (PCA), a dimensionality
 reduction technique, works. We’ll see how it’s calculated step by step
-and how to implement it in R. You can also test and reinforce what
-you’ve learned with the exercises at the end of the book. Keep in mind
-that machine learning is like an iceberg; teaching is what’s visible,
-learning is the hidden part of the iceberg. If you don’t practice what
-you’ve learned with various datasets, you’ll essentially learn nothing.
-Considering all of this, I hope this book will be beneficial for you.
+and how to implement it in R and Python. You can also test and reinforce
+what you’ve learned with the exercises at the end of the book. Keep in
+mind that machine learning is like an iceberg; teaching is what’s
+visible, learning is the hidden part of the iceberg. If you don’t
+practice what you’ve learned with various datasets, you’ll essentially
+learn nothing. Considering all of this, I hope this book will be
+beneficial for you.
 
 # 2. Choosing the Optimal Number of Clusters
 
