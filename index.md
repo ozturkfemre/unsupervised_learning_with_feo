@@ -13,19 +13,22 @@
   - [3.1. Data Preparation for
     k-means](#31-data-preparation-for-k-means)
   - [3.2. k-means in R](#32-k-means-in-r)
+  - [3.3. k-means in Python](#33-k-means-in-python)
 - [4. k-medoids Clustering](#4-k-medoids-clustering)
   - [k-means and k-medoids cheat
     sheet](#k-means-and-k-medoids-cheat-sheet)
 - [5. Hierarchical Clustering](#5-hierarchical-clustering)
   - [5.1. Cophenetic Distance](#51-cophenetic-distance)
-  - [5.2. Ward’s Minimum Variance Method in
-    R](#52-wards-minimum-variance-method-in-r)
-  - [5.3. Average Linkage Method in R](#53-average-linkage-method-in-r)
+  - [5.2. Ward’s Minimum Variance
+    Method](#52-wards-minimum-variance-method)
+  - [5.3. Average Linkage Method](#53-average-linkage-method)
   - [hierarchical clustering cheat
     sheet](#hierarchical-clustering-cheat-sheet)
 - [6. Density Based Clustering](#6-density-based-clustering)
   - [6.1. Density Based Clustering in
     R](#61-density-based-clustering-in-r)
+  - [6.2. Density Based Clustering in
+    Python](#62-density-based-clustering-in-python)
 - [7. Cluster Validation](#7-cluster-validation)
   - [7.1. Connectivity](#71-connectivity)
   - [7.2. Corrected Rand Index](#72-corrected-rand-index)
@@ -36,6 +39,8 @@
 - [8. Principle Component Analysis](#8-principle-component-analysis)
   - [8.1. Principle Component Analysis in
     R](#81-principle-component-analysis-in-r)
+  - [8.2. Principle Component Analysis in
+    Python](#82-principle-component-analysis-in-python)
 - [Exercises](#exercises)
 
 ![](images/unsupervised_learning_with_feo.png)
@@ -197,20 +202,32 @@ reason, it draws attention as a result open to interpretation. An
 interpretation based on this elbow may therefore lead to incorrect
 results.
 
-In Python, we can draw elbow plot
+In Python, we can draw elbow plot using sklearn.cluster and
+matplotlib.pyplot.
 
-    Sum_of_squared_distances = []
-    K = range(1,10)
-    for num_clusters in K :
-     kmeans = KMeans(n_clusters=num_clusters, n_init=25)
-     kmeans.fit(pcadf)
-     Sum_of_squared_distances.append(kmeans.inertia_)
-    plt.figure(figsize=(10,7))
-    plt.plot(K,Sum_of_squared_distances, 'x-')
-    plt.xlabel('cluster number') 
-    plt.ylabel('Total Within Cluster Sum of Squares') 
-    plt.title('Elbow Plot')
-    plt.show()
+``` python
+import matplotlib.pyplot as plt
+from sklearn.cluster import KMeans
+
+Sum_of_squared_distances = []
+K = range(1,10)
+
+# for loop to calculate Total Within Cluster Sum of Squares for each clustering result in the given range.
+for num_clusters in K :
+ kmeans = KMeans(n_clusters=num_clusters, n_init=25)
+ kmeans.fit(pcadf)
+ Sum_of_squared_distances.append(kmeans.inertia_)
+
+# drawing elbow plot
+plt.figure(figsize=(10,7))
+plt.plot(K,Sum_of_squared_distances, 'x-')
+plt.xlabel('cluster number') 
+plt.ylabel('Total Within Cluster Sum of Squares') 
+plt.title('Elbow Plot')
+plt.show()
+```
+
+![](images/py/1.png)
 
 ## 2.2. Average Silhouette Method
 
@@ -288,6 +305,35 @@ clusters 3 is also quite close, although number of clusters 2 is
 highest. For this reason, it would be more useful to always run
 clustering algorithm for both 2 and 3 clusters and interpret results.
 
+In Python, we can calculate average silhouette score of a given
+clustering result by using silhouette_score function from
+sklearn.metrics library. Similar with the elbow method, we can draw the
+plot using matplotlib:
+
+    from sklearn.metrics import silhouette_score
+
+    K = [2, 3, 4, 5, 6, 7, 8, 9, 10]
+    silhouette_avg = []
+    for num_clusters in K:
+     
+     # initialise kmeans
+     km = KMeans(n_clusters=num_clusters, n_init=25)
+     km.fit(pcadf)
+     cluster_labels = km.labels_
+     
+     # silhouette score
+     silhouette_avg.append(silhouette_score(pcadf, cluster_labels))
+
+    # drawing plot
+    plt.figure(figsize=(10,7))
+    plt.plot(K,silhouette_avg,'bx-')
+    plt.xlabel('cluster number k') 
+    plt.ylabel('Silhouette score') 
+    plt.title('Average Silhouette Plot')
+    plt.show()
+
+![](images/py/2.png)
+
 ## 2.3. Gap Statistic
 
 Gap is a metric that measures cluster validity by comparing the observed
@@ -326,6 +372,32 @@ fviz_nbclust(df,
 
 Just like Average Silhouette Method, Gap Statistic Method is also
 offered 2 as optimal number of clusters.
+
+In Python, you can calculate DB using the following codes:  
+
+    from sklearn.metrics import davies_bouldin_score
+
+    K = [2, 3, 4, 5, 6, 7, 8, 9, 10]
+    db = []
+    for num_clusters in K:
+     
+     # initialise kmeans
+     kmeans = KMeans(n_clusters=num_clusters, n_init=25)
+     kmeans.fit(pcadf)
+     cluster_labels = kmeans.fit_predict(pcadf)
+     
+     # db calculation
+     db.append(davies_bouldin_score(pcadf, cluster_labels))
+
+
+    plt.figure(figsize=(10,7))
+    plt.plot(K,db,'bx-')
+    plt.xlabel('cluster number k') 
+    plt.ylabel('Davies Bouldin score') 
+    plt.title('Davies Bouldin Plot')
+    plt.show()
+
+![](images/py/3.png)
 
 ## 2.4. Calinski-Harabasz Method
 
@@ -394,6 +466,14 @@ fviz_ch(df)
 
 As other methods, Calinski — Harabasz methods is also offered 2 clusters
 for data set.
+
+In Python, you can use the following codes for Calinksi-Harabasz
+calculation:
+
+    from sklearn.metrics import calinski_harabasz_score
+    calinski_harabasz_score(df, # dataset
+                            kmeans2.labels_ # cluster assignments
+                            )
 
 ## 2.5. Davies-Bouldin Method
 
@@ -521,6 +601,17 @@ As Davies-Bouldin methods, Dunn also suggested different cluster number.
 As I said before, each method may give different results for each data
 set. For this reason, it is useful to compare all methods in each
 clustering analysis.
+
+In Python, you can use dunn function from validclust library to
+calculate Dunn index as follows:
+
+    from sklearn.metrics import pairwise_distances
+    from validclust import dunn
+
+    dist = pairwise_distances(df) # pairwise distance calculation
+    dunn(dist, # distance matrix
+         k_means(df, n_clusters=2).labels # clustering assignments
+         )
 
 ***References for Chapter***
 
@@ -846,6 +937,107 @@ k2m_data$clust_plot
 
 ![](index_files/figure-gfm/unnamed-chunk-12-1.png)<!-- -->
 
+## 3.3. k-means in Python
+
+You can use sklearn.cluster library to implement k-means clustering in
+python. However, you cannot get the similar output like R. You need to
+call for every information you need to see it.
+
+    from sklearn.cluster import KMeans
+
+    kmeans2 = KMeans(n_clusters=2, # the number of clusters to form
+                     random_state=0, # determines random number generation for centroid initialization.
+                     n_init=25, # number of times the k-means algorithm is run with different centroid seeds
+                     algorithm='lloyd' # k-means algorithm to use.
+                     ) 
+
+    kmeans2.fit(df)
+
+To see a R-like output, you can use the following codes:
+
+    # for loop to determines each object's cluster
+    zero = []
+    one = []
+    for i in kmeans2.labels_:
+        if i == 0:
+            zero.append(i)
+        else:
+            one.append(i)
+
+    # printing output
+    print('\n',
+          "Cluster centers:", '\n',
+          "Cluster 0 :", kmeans2.cluster_centers_[0],'\n',
+           "Cluster 1 :", kmeans2.cluster_centers_[1], '\n','\n',
+            "Clustering vector:" ,'\n', kmeans2.labels_, '\n','\n',
+             "Total Within Cluster Sum of Squares : ", '\n',
+             kmeans2.inertia_ , '\n',
+              "Observation numbers :", '\n',
+              "Cluster 0 :", len(zero), '\n',
+              "Cluster 1 :", len(one))
+
+    Cluster centers: 
+     Cluster 0 : [ 3.00438761 -0.07488982] 
+     Cluster 1 : [-1.29082985  0.03217628] 
+     
+     Clustering vector: 
+     [0 0 0 0 0 0 0 0 0 0 1 0 0 1 0 0 1 0 0 1 1 1 0 0 0 0 0 0 0 0 0 1 0 0 0 0 1
+     1 1 1 1 1 0 1 1 0 1 1 1 1 1 1 1 0 1 1 0 0 1 1 1 1 0 1 1 0 1 1 1 1 0 1 0 1
+     1 1 1 0 0 1 1 1 0 0 1 0 1 0 1 0 1 1 1 1 0 0 1 1 1 1 1 1 1 1 1 0 1 1 0 1 1
+     1 0 1 1 1 1 0 0 1 1 0 0 1 1 1 1 0 0 0 1 0 0 1 0 1 1 1 0 1 1 1 1 1 1 1 0 1
+     1 1 1 1 0 1 1 1 0 1 1 1 1 0 0 1 0 1 1 1 0 1 1 1 0 1 1 1 1 0 1 1 0 0 1 1 1
+     1 1 1 1 1 0 1 1 1 0 1 0 0 0 1 1 0 0 0 1 1 1 1 1 1 0 1 0 0 0 1 1 1 0 0 1 1
+     1 0 1 1 1 1 1 0 0 1 1 0 1 1 0 0 1 0 1 1 1 1 0 1 1 1 1 1 0 1 0 0 0 1 0 0 0
+     0 0 1 0 1 0 0 1 1 1 1 1 1 0 1 1 1 1 1 1 1 0 1 0 0 1 1 1 1 1 1 1 1 1 1 1 1
+     1 1 1 1 0 1 0 1 1 1 1 1 1 1 1 1 1 1 1 1 1 0 1 1 1 0 1 0 1 1 1 1 0 0 0 1 1
+     1 1 0 1 0 1 0 1 1 1 0 1 1 1 1 1 1 1 0 0 1 1 1 1 1 1 1 1 1 1 1 1 0 0 1 0 0
+     0 1 0 0 1 0 1 1 1 0 1 1 1 1 1 1 1 1 1 0 1 1 0 0 1 1 1 1 1 1 0 1 1 1 1 1 1
+     1 0 1 1 1 1 1 1 1 1 0 1 1 1 0 1 1 1 1 1 1 1 1 0 1 0 0 1 1 1 1 1 1 1 0 1 1
+     0 1 0 1 1 0 1 0 1 1 1 1 1 1 1 1 0 0 1 1 1 1 1 1 0 1 1 1 1 1 1 1 1 1 1 0 1
+     1 1 1 1 1 1 0 1 1 1 1 0 1 1 1 1 1 0 0 1 0 1 0 0 1 1 1 1 0 1 1 0 1 1 1 0 0
+     1 1 1 0 1 1 1 1 1 1 1 1 1 1 1 0 1 0 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
+     1 1 1 1 1 1 1 0 0 0 0 1 0 1] 
+     
+     Total Within Cluster Sum of Squares :  
+     2342.4243127486625 
+     Observation numbers : 
+     Cluster 0 : 171 
+     Cluster 1 : 398
+
+In Python, there is no library like factoextra to draw cluster plots, as
+far as I know. However, if you want to see your clustering result in a
+plot, you can use the following coes:
+
+    import seaborn as sns
+    from scipy.spatial import ConvexHull
+    from matplotlib.colors import to_rgba
+
+    sns.set_style("whitegrid")
+    data = pcadf
+    xcol = "PC1"
+    ycol = "PC2"
+    hues = [0,1]
+    colors = sns.color_palette("Paired", len(hues))
+    palette = {hue_val: color for hue_val, color in zip(hues, colors)}
+    plt.figure(figsize=(15,10))
+
+    g = sns.relplot(data=pcadf, x=xcol, y=ycol, hue=kmeans2.labels_, style=kmeans2.labels_, col=kmeans2.labels_, palette=palette, kind="scatter")
+    # function for borders
+    def overlay_cv_hull_dataframe(x, y, color, data, hue):
+        for hue_val, group in pcadf.groupby(hue):
+            hue_color = palette[hue_val]
+            points = group[[x, y]].values
+            hull = ConvexHull(points)
+            plt.fill(points[hull.vertices, 0], points[hull.vertices, 1],
+                     facecolor=to_rgba(hue_color, 0.2),
+                     edgecolor=hue_color)
+    g.map_dataframe(overlay_cv_hull_dataframe, x=xcol, y=ycol, hue=kmeans2.labels_)
+    g.set_axis_labels(xcol, ycol)
+
+    plt.show()
+
+![](images/py/4.png)
+
 ***References for Chapter***
 
 \[1\] Hartigan, John A., Manchek A. Wong. Algorithm AS 136: A k-means
@@ -1003,6 +1195,89 @@ According to the cluster plot, no overlap is observed. The separation
 occurs only in the PC1 dimension. The variance in the first cluster
 shown in red color is higher.
 
+### 4.2. k-medoids in Python
+
+In Python, you can built k-medoids clustering using the KMedoids
+function in the sklearn_extra.cluster package. However, it is not
+possible to get an R-like output just like the KMeans function. We can
+still get a similar output with our own code.
+
+    from sklearn_extra.cluster import KMedoids
+
+    # clustering
+    kmedoids2 = KMedoids(n_clusters=2)
+    kmedoids2.fit(df)
+
+    # output
+    zero = []
+    one = []
+    for i in kmedoids2.labels_:
+        if i == 0:
+            zero.append(i)
+        else:
+            one.append(i)
+
+
+    print('\n',
+          "Cluster medoids:", '\n',
+          "Cluster 0 :", kmedoids2.cluster_centers_[0],'\n',
+           "Cluster 1 :", kmedoids2.cluster_centers_[1], '\n','\n',
+            "Clustering vector:" ,'\n', kmedoids2.labels_, '\n','\n',
+             "Total Within Cluster Sum of Squares : ", '\n',
+             kmedoids2.inertia_ , '\n',
+              "Observation numbers :", '\n',
+              "Cluster 0 :", len(zero), '\n',
+              "Cluster 1 :", len(one))
+
+     Cluster medoids: 
+     Cluster 0 : [ 2.35928485 -0.30157828] 
+     Cluster 1 : [-1.35986794 -0.03765549] 
+     
+     Clustering vector: 
+     [0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 1 0 0 1 1 1 0 0 0 0 0 0 0 0 0 1 0 0 0 0 1
+     1 1 1 1 1 0 1 1 0 1 0 1 1 1 1 1 0 1 1 0 0 1 1 1 1 0 1 1 0 1 1 1 1 0 1 0 1
+     1 0 1 0 0 1 1 0 0 0 1 0 1 0 1 0 1 0 1 1 0 0 1 1 1 1 1 1 1 1 1 0 1 1 0 1 1
+     1 0 1 1 1 1 0 0 0 1 0 0 1 1 1 1 0 0 0 1 0 0 1 0 1 1 1 0 1 1 0 1 1 1 1 0 1
+     1 1 1 1 0 1 1 1 0 1 1 1 1 0 0 1 0 1 1 0 0 1 1 1 0 1 1 1 1 0 1 1 0 0 1 1 1
+     1 0 1 1 1 0 1 1 1 0 1 0 0 0 0 1 0 0 0 1 1 1 0 1 1 0 1 0 0 0 0 1 1 0 0 1 1
+     1 0 1 1 1 1 1 0 0 1 1 0 1 1 0 0 1 0 1 1 1 1 0 1 1 1 1 1 0 1 0 0 0 1 0 0 0
+     0 0 1 0 1 0 0 1 1 1 1 1 1 0 1 0 1 1 0 1 1 0 1 0 0 1 1 1 1 1 1 0 1 1 1 1 1
+     1 1 1 1 0 1 0 1 1 1 1 1 1 1 1 1 1 1 1 1 1 0 1 1 1 0 1 0 1 1 1 1 0 0 0 1 1
+     1 1 0 1 0 1 0 1 1 1 0 1 1 1 1 1 1 1 0 0 0 1 1 1 1 1 1 1 1 1 1 1 0 0 1 0 0
+     0 1 0 0 1 0 1 1 1 0 1 1 1 1 1 1 1 1 1 0 1 1 0 0 1 1 1 1 1 1 0 1 1 1 1 1 1
+     1 0 1 1 1 1 1 1 1 1 0 1 1 1 0 1 1 1 1 1 1 1 1 0 1 0 0 1 1 1 1 1 1 1 0 1 1
+     0 1 0 1 1 0 1 0 1 1 1 1 1 1 1 1 0 0 1 1 1 1 1 1 0 1 1 1 1 1 1 1 1 1 1 0 1
+     1 1 1 0 1 1 0 1 1 1 1 0 1 1 1 1 1 0 0 1 0 1 0 0 1 1 1 1 0 1 1 0 1 1 1 0 0
+     1 1 1 0 1 1 1 1 1 1 1 1 1 1 1 0 1 0 0 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
+     1 1 1 1 1 1 1 0 0 0 0 0 0 1] 
+     
+     Total Within Cluster Sum of Squares :  
+     968.3783653743097 
+     Observation numbers : 
+     Cluster 0 : 190 
+     Cluster 1 : 379
+
+Again, just like KMeans, you can draw a clustering plot with the
+following code.
+
+    sns.set_style("whitegrid")
+    data = pcadf
+    xcol = "PC1"
+    ycol = "PC2"
+    hues = [0,1]
+    colors = sns.color_palette("Paired", len(hues))
+    palette = {hue_val: color for hue_val, color in zip(hues, colors)}
+    plt.figure(figsize=(15,10))
+
+    g = sns.relplot(data=df, x=xcol, y=ycol, hue=kmedoids2.labels_, style=kmedoids2.labels_, col=kmedoids2.labels_, palette=palette, kind="scatter")
+
+    g.map_dataframe(overlay_cv_hull_dataframe, x=xcol, y=ycol, hue=kmedoids2.labels_)
+    g.set_axis_labels(xcol, ycol)
+
+    plt.show()
+
+![](images/py/5.png)
+
 ***References for Chapter***
 
 \[1\] Kaufman, L., & Rousseeuw, P. (1987). Clustering by means of
@@ -1134,7 +1409,9 @@ and distance matrix is examined, it is observed that hierarchical
 clustering with Euclidean distance gives better results. That’s why we
 will continue the analysis with Euclidean distance metric.
 
-## 5.2. Ward’s Minimum Variance Method in R
+## 5.2. Ward’s Minimum Variance Method
+
+### 5.2.1. R
 
 To determine the number of clusters in hierarchical clustering, we can
 use methods to determine the optimal number of clusters, just as we do
@@ -1224,7 +1501,68 @@ seen that the separation occurs only in both PC1 and PC2. While the
 variance in the first cluster shown in red is high, the variance in the
 second cluster shown in green is low.
 
-## 5.3. Average Linkage Method in R
+### 5.2.2. Python
+
+In Python, at first, we can draw dendogram as follows:
+
+    import scipy.cluster.hierarchy as sch
+    plt.figure(figsize = (16 ,8))
+
+    dendrogram = sch.dendrogram(sch.linkage(df, method  = "ward"))
+
+    plt.title("Dendrogram")
+    plt.show()
+
+![](images/py/6.png)
+
+To build Ward’s model, you can use AgglomerativeClustering function as
+follows:
+
+    from sklearn.cluster import AgglomerativeClustering
+
+    hc = AgglomerativeClustering(n_clusters = 2, metric = "euclidean", linkage = "ward")
+
+    ward2 = hc.fit_predict(df)
+
+Again, we can create R-like output as follows:
+
+    zero = []
+    one = []
+    for i in ward2:
+        if i == 0:
+            zero.append(i)
+        else:
+            one.append(i)
+
+    print("Observation Numbers :", '\n',
+        "Cluster 0: ", len(zero),'\n',
+        "Cluster 1: ", len(one))
+
+    Observation Numbers : 
+     Cluster 0:  180 
+     Cluster 1:  389
+
+You can follow codes in the below to draw clustering plot:
+
+    data = df
+    xcol = "PC1"
+    ycol = "PC2"
+    hues = [0,1]
+    colors = sns.color_palette("Paired", len(hues))
+    palette = {hue_val: color for hue_val, color in zip(hues, colors)}
+    plt.figure(figsize=(15,10))
+    g = sns.relplot(data=df, x=xcol, y=ycol, hue=ward2, style=ward2, col=ward2, palette=palette, kind="scatter")
+
+    g.map_dataframe(overlay_cv_hull_dataframe, x=xcol, y=ycol, hue=ward2)
+    g.set_axis_labels(xcol, ycol)
+
+    plt.show()
+
+![](images/py/8.png)
+
+## 5.3. Average Linkage Method
+
+### R
 
 Since cophenetic distance is covered in the Ward’s Minimum Variance
 Method, it will not be shared with you in this part. However, it is
@@ -1312,6 +1650,25 @@ fviz_cluster(list(data = pcadata, cluster = grupav2),
 ```
 
 ![](index_files/figure-gfm/unnamed-chunk-26-1.png)<!-- -->
+
+### Python
+
+At first, let me draw the dendogram:
+
+    plt.figure(figsize = (16 ,8))
+
+    dendrogram = sch.dendrogram(sch.linkage(pcadf, method  = "average"))
+
+    plt.title("Dendrogram")
+    plt.show()
+
+![](images/py/7.png)
+
+We can build hierarchical clustering model with average linkage just by
+changing linkage argument of the AgglomerativeClustering function.
+
+    hc = AgglomerativeClustering(n_clusters = 3, metric = "euclidean", linkage = "average")
+    average3 = hc.fit_predict(pcadf)
 
 ***References for Chapter***
 
@@ -1492,6 +1849,40 @@ When the plot is examined, it can be seen that the observation
 difference between the clusters is small. The excess of noise
 values(black points) is also noteworthy.
 
+## 6.2. Density Based Clustering in Python
+
+In Python, we can draw kNN distplot as follows:
+
+    from sklearn.neighbors import NearestNeighbors
+
+    nbrs = NearestNeighbors(n_neighbors = 5).fit(pcadf)
+    neigh_dist, neigh_ind = nbrs.kneighbors(pcadf)
+    sort_neigh_dist = np.sort(neigh_dist, axis = 0)
+
+    k_dist = sort_neigh_dist[:, 4]
+    plt.plot(k_dist)
+    plt.ylabel("k-NN distance")
+    plt.xlabel("Sorted observations (4th NN)")
+    plt.show()
+
+Different from R, by using KneeLocator function, we can get exact
+location of knee.
+
+    from kneed import KneeLocator
+    kneedle = KneeLocator(x = range(1, len(neigh_dist)+1), y = k_dist, S = 1.0, 
+                          curve = "concave", direction = "increasing", online=True)
+
+    # get the estimate of knee point
+    print(kneedle.knee_y)
+
+    1.7367892222137986
+
+To build DBSCAN model, you can follow the codes below:
+
+    from sklearn.cluster import DBSCAN
+
+    dbscan = DBSCAN(eps = 1.73, min_samples = 20).fit(pcadf)
+
 ***References for Chapter***
 
 \[1\] Kriegel, H. P., Kröger, P., Sander, J., & Zimek, A. (2011).
@@ -1566,6 +1957,8 @@ connectivity(distance = NULL, k2m_data$cluster, Data = df, neighbSize = 20,
 
     ## [1] 64.96498
 
+As far as I know, there is no function for connectivity in python.
+
 ## 7.2. Corrected Rand Index
 
 Corrected Rand index (CRI) is a validity metric that compares two
@@ -1594,6 +1987,14 @@ cluster.stats(d = dist(df),diagnosis, k2m_data$cluster)$corrected.rand
 
     ## [1] 0.6465881
 
+### 7.2.2. Corrected Rand Index in Python
+
+In Python, you can calculate as follows:
+
+    from sklearn.metrics.cluster import adjusted_rand_score
+
+    adjusted_rand_score(df1['Diagnosis'],kmeans2.labels_)
+
 ## 7.3. Meila’s Variation of Information
 
 Based on the idea that the similarity between two clustering solutions
@@ -1615,6 +2016,11 @@ cluster.stats(d = dist(df),diagnosis, k2m_data$cluster)$vi
 ```
 
     ## [1] 0.5687046
+
+### 7.3.2. Meila’s Variation of Information in Python
+
+As far as I know, there is no function for Meila’s Variation of
+Information in Python.
 
 ## 7.4. Silhouette Coefficient
 
@@ -1662,6 +2068,15 @@ sil[neg_sil_index, , drop = FALSE]
     ## 215       1        2 -0.11522042
     ## 12        1        2 -0.13105913
     ## 376       1        2 -0.13159631
+
+In Python, you can draw silhouette plot as follows:
+
+    from yellowbrick.cluster import silhouette_visualizer
+
+    plt.figure(figsize=(10,7))
+    silhouette_visualizer(kmeans2, pcadf, colors='yellowbrick')
+
+![](images/py/9.png)
 
 ## 7.5. Dunn Index
 
@@ -1956,6 +2371,18 @@ principal component analysis. Functional genomics. Humana press,
 \[4\] Ding, Chris, and Xiaofeng He. K-means clustering via principal
 component analysis. Proceedings of the twenty-first international
 conference on Machine learning. 2004.
+
+## 8.2. Principle Component Analysis in Python
+
+    from sklearn.preprocessing import StandardScaler
+    from sklearn.decomposition import PCA
+
+    sdf = StandardScaler().fit_transform(df)
+
+    pca = PCA(n_components=2)
+    principalComponents = pca.fit_transform(sdf)
+
+    pcadf = pd.DataFrame(data = principalComponents, columns = ['PC1', 'PC2'])
 
 # Exercises
 
