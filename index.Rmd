@@ -18,7 +18,7 @@ At the core of unsupervised learning are two main concepts: clustering and dimen
 
 Dimensionality reduction, on the other hand, involves simplifying complex data by reducing the number of features or dimensions. Imagine a detailed picture; dimensionality reduction helps create a simpler, abstract representation that preserves the essence of the original. It's important to remember that every task we assign to machines comes with a cost, just like a task at work or a school assignment. Tasks that are simpler require less time, effort, and potentially much more. Dimensionality reduction accomplishes exactly that. A reduced dataset allows the machine to work with less strain and lower costs. Plus, it's not just about the cost; it's also about the possibilities. Data visualization is limited to three dimensions. Beyond that, visualizing datasets with more variables is impossible. However, if you reduce a 15-variable dataset to two variables, it becomes visually representable. Taking all these aspects into account, dimensionality reduction acts as the benevolent algorithm wizard, saving us from the curse of high dimensionality.
 
-In the rest of this book, we'll explore various clustering algorithms and learn how Principal Component Analysis (PCA), a dimensionality reduction technique, works. We'll see how it's calculated step by step and how to implement it in R and Python. You can also test and reinforce what you've learned with the exercises at the end of the book. Keep in mind that machine learning is like an iceberg; teaching is what's visible, learning is the hidden part of the iceberg. If you don't practice what you've learned with various datasets, you'll essentially learn nothing. Considering all of this, I hope this book will be beneficial for you.
+In the rest of this book, we'll explore various clustering algorithms and learn how Principal Component Analysis (PCA), a dimensionality reduction technique, works. We'll see how it's calculated step by step and how to implement it in R and Pythons. You can also test and reinforce what you've learned with the exercises at the end of the book. Keep in mind that machine learning is like an iceberg; teaching is what's visible, learning is the hidden part of the iceberg. If you don't practice what you've learned with various datasets, you'll essentially learn nothing. Considering all of this, I hope this book will be beneficial for you.
 
 # 2. Choosing the Optimal Number of Clusters
 
@@ -192,33 +192,6 @@ fviz_nbclust(df,
 
 Just like Average Silhouette Method, Gap Statistic Method is also offered 2 as optimal number of clusters.
 
-In Python, you can calculate DB using the following codes:\
-
-```         
-from sklearn.metrics import davies_bouldin_score
-
-K = [2, 3, 4, 5, 6, 7, 8, 9, 10]
-db = []
-for num_clusters in K:
- 
- # initialise kmeans
- kmeans = KMeans(n_clusters=num_clusters, n_init=25)
- kmeans.fit(pcadf)
- cluster_labels = kmeans.fit_predict(pcadf)
- 
- # db calculation
- db.append(davies_bouldin_score(pcadf, cluster_labels))
-
-
-plt.figure(figsize=(10,7))
-plt.plot(K,db,'bx-')
-plt.xlabel('cluster number k') 
-plt.ylabel('Davies Bouldin score') 
-plt.title('Davies Bouldin Plot')
-plt.show()
-```
-
-![](images/py/3.png)
 
 ## 2.4. Calinski-Harabasz Method
 
@@ -923,7 +896,7 @@ plt.show()
 
 To build Ward's model, you can use AgglomerativeClustering function as follows:
 
-```{}
+```         
 from sklearn.cluster import AgglomerativeClustering
 
 hc = AgglomerativeClustering(n_clusters = 2, metric = "euclidean", linkage = "ward")
@@ -933,7 +906,7 @@ ward2 = hc.fit_predict(df)
 
 Again, we can create R-like output as follows:
 
-```{}
+```         
 zero = []
 one = []
 for i in ward2:
@@ -947,7 +920,7 @@ print("Observation Numbers :", '\n',
     "Cluster 1: ", len(one))
 ```
 
-```{}
+```         
 Observation Numbers : 
  Cluster 0:  180 
  Cluster 1:  389
@@ -955,7 +928,7 @@ Observation Numbers :
 
 You can follow codes in the below to draw clustering plot:
 
-```{}
+```         
 data = df
 xcol = "PC1"
 ycol = "PC2"
@@ -973,9 +946,9 @@ plt.show()
 
 ![](images/py/8.png)
 
-## 5.3. Average Linkage Method  
+## 5.3. Average Linkage Method
 
-### R
+### 5.3.1. R
 
 Since cophenetic distance is covered in the Ward's Minimum Variance Method, it will not be shared with you in this part. However, it is necessary to state that Euclidean distance again gave the better results. Again, you can use `fviz_dend` function in `factoextra` package to visualise dendogram of a hierarchical clustering with the object you created from hierarchical clustering with the function `hclust` from stats package.
 
@@ -1014,11 +987,11 @@ fviz_cluster(list(data = pcadata, cluster = grupav2),
              show.clust.cent = FALSE, ggtheme = theme_minimal())
 ```
 
-### Python
+### 5.3.2. Python
 
 At first, let me draw the dendogram:
 
-```{}
+```         
 plt.figure(figsize = (16 ,8))
 
 dendrogram = sch.dendrogram(sch.linkage(pcadf, method  = "average"))
@@ -1031,7 +1004,7 @@ plt.show()
 
 We can build hierarchical clustering model with average linkage just by changing linkage argument of the AgglomerativeClustering function.
 
-```{}
+```         
 hc = AgglomerativeClustering(n_clusters = 3, metric = "euclidean", linkage = "average")
 average3 = hc.fit_predict(pcadf)
 ```
@@ -1128,7 +1101,7 @@ When the plot is examined, it can be seen that the observation difference betwee
 
 In Python, we can draw kNN distplot as follows:
 
-```{}
+```         
 from sklearn.neighbors import NearestNeighbors
 
 nbrs = NearestNeighbors(n_neighbors = 5).fit(pcadf)
@@ -1144,7 +1117,7 @@ plt.show()
 
 Different from R, by using KneeLocator function, we can get exact location of knee.
 
-```{}
+```         
 from kneed import KneeLocator
 kneedle = KneeLocator(x = range(1, len(neigh_dist)+1), y = k_dist, S = 1.0, 
                       curve = "concave", direction = "increasing", online=True)
@@ -1153,13 +1126,13 @@ kneedle = KneeLocator(x = range(1, len(neigh_dist)+1), y = k_dist, S = 1.0,
 print(kneedle.knee_y)
 ```
 
-```{}
+```         
 1.7367892222137986
 ```
 
 To build DBSCAN model, you can follow the codes below:
 
-```{}
+```         
 from sklearn.cluster import DBSCAN
 
 dbscan = DBSCAN(eps = 1.73, min_samples = 20).fit(pcadf)
@@ -1239,7 +1212,7 @@ cluster.stats(d = dist(df),diagnosis, k2m_data$cluster)$corrected.rand
 
 In Python, you can calculate as follows:
 
-```{}
+```         
 from sklearn.metrics.cluster import adjusted_rand_score
 
 adjusted_rand_score(df1['Diagnosis'],kmeans2.labels_)
@@ -1282,7 +1255,7 @@ sil[neg_sil_index, , drop = FALSE]
 
 In Python, you can draw silhouette plot as follows:
 
-```{}
+```         
 from yellowbrick.cluster import silhouette_visualizer
 
 plt.figure(figsize=(10,7))
@@ -1444,7 +1417,7 @@ When the PCA graph of the variables is analyzed, it can be said that the variabl
 
 ## 8.2. Principle Component Analysis in Python
 
-```{}
+```         
 from sklearn.preprocessing import StandardScaler
 from sklearn.decomposition import PCA
 
@@ -1454,7 +1427,6 @@ pca = PCA(n_components=2)
 principalComponents = pca.fit_transform(sdf)
 
 pcadf = pd.DataFrame(data = principalComponents, columns = ['PC1', 'PC2'])
-
 ```
 
 # Exercises
